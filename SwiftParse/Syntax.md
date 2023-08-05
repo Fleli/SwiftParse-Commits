@@ -61,11 +61,11 @@ nested Type {
 precedence Expression {
     
     infix #+ , #-
-    inifx #* , #/ , #%
+    infix #* , #/ , #%
     prefix #-
     
-    ; #( Expression #)
-    ; #identifier
+    : #( Expression #)
+    : #identifier
     
 }
 
