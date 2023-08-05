@@ -20,7 +20,9 @@ class Generator {
             print($0)
         }
         
-        let statements = parser.parse(tokens)
+        let statements = try parser.parse(tokens)
+        
+        print(statements)
         
         
     }

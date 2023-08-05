@@ -3,11 +3,11 @@ let generator = Generator()
 let path = "/Users/frederikedvardsen/desktop/"
 
 let specification = """
-nested Type {
+enum Statement {
     
-    case function Type #-> Type
-    case tuple Type -> #( [ Type | #, ] #)
-    case basic Type -> #identifier
+    case Assignment
+    case Declaration
+    case Call
     
 }
 """
