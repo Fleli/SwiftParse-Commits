@@ -13,6 +13,7 @@ enum StatementType: CustomStringConvertible {
     case `enum`(cases: [RhsComponent])
     case nested(cases: [NestItem])
     case precedence(groups: [PrecedenceGroup])
+    case `class`(elements: [ClassElement])
     
     var description: String {
         switch self {
@@ -22,6 +23,8 @@ enum StatementType: CustomStringConvertible {
             return "nested of \(items)"
         case .precedence(let groups):
             return "precedence of \(groups)"
+        case .class(let elements):
+            return "class of \(elements)"
         }
     }
     
@@ -100,4 +103,43 @@ enum OperatorPosition: String {
     case prefix = "prefix"
     case infix = "infix"
     case postfix = "postfix"
+}
+
+struct ClassElement: CustomStringConvertible {
+    
+    let required: Bool
+    let classItems: [ClassItem]
+    
+    var description: String {
+        return (required ? "!" : "?") + " " + classItems.description
+    }
+    
+    init(_ lineInitializer: String, classItems: [ClassItem]) {
+        
+        switch lineInitializer {
+        case "?":   required = false
+        case "!":   required = true
+        default:    fatalError()
+        }
+        
+        self.classItems = classItems
+        
+    }
+    
+}
+
+enum ClassItem: CustomStringConvertible {
+    
+    case classField(name: String, type: RhsItem)
+    case syntactical(item: RhsItem)
+    
+    var description: String {
+        switch self {
+        case .classField(let name, let type):
+            return name + ": " + type.description
+        case .syntactical(let item):
+            return item.description
+        }
+    }
+    
 }

@@ -23,6 +23,8 @@ class LLParser {
                 try parseNested()
             case "precedence":
                 try parsePrecedence()
+            case "class":
+                try parseClass()
             default:
                 throw ParseError.unexpected(found: tokens[index].content, expected: "some Statement")
             }
@@ -174,7 +176,46 @@ class LLParser {
     }
     
     
-    
+    private func parseClass() throws {
+        
+        index += 1
+        
+        let name = try nextToken(as: "nonTerminal").content
+        
+        try assertNextIsAmong("{")
+        index += 1
+        
+        var classElements: [ClassElement] = []
+        
+        while notExhausted {
+            
+            switch tokens[index].type {
+                
+            case let lineInitializer where ["!", "?"].contains(lineInitializer):
+                
+                index += 1
+                
+                let items: [ClassItem] = try parseClassItems()
+                let classElement = ClassElement(lineInitializer, classItems: items)
+                classElements.append(classElement)
+                
+            case "}":
+                
+                index += 1
+                break
+                
+            default:
+                
+                throw ParseError.unexpected(found: tokens[index].content, expected: "class element")
+                
+            }
+            
+        }
+        
+        let statement = Statement(lhs: name, rhs: .class(elements: classElements))
+        statements.append(statement)
+        
+    }
     
     
     private func assertNextIsAmong(_ types: String ...) throws {
@@ -241,6 +282,60 @@ class LLParser {
         }
         
         return collected
+        
+    }
+    
+    
+    private func parseClassItems() throws -> [ClassItem] {
+        
+        var classItems: [ClassItem] = []
+        
+        func parseVarDeclaration() throws -> ClassItem {
+            
+            index += 1
+            
+            let fieldName = try nextToken(as: "identifier").content
+            
+            try assertNextIsAmong(":")
+            index += 1
+            
+            guard let type = RhsItem(from: tokens[index]) else {
+                throw ParseError.unexpected(found: tokens[index].content, expected: "RhsItem")
+            }
+            
+            index += 1
+            
+            return .classField(name: fieldName, type: type)
+            
+        }
+        
+        while notExhausted {
+            
+            switch tokens[index].type {
+            case "var":
+                
+                try classItems.append(parseVarDeclaration())
+                
+            case "terminal", "nonTerminal":
+                
+                let item = RhsItem(from: tokens[index])!
+                classItems.append(.syntactical(item: item))
+                
+                index += 1
+                
+            case "!", "?", "}":
+                
+                return classItems
+                
+            default:
+                
+                throw ParseError.unexpected(found: tokens[index].content, expected: "class item")
+                
+            }
+            
+        }
+        
+        return classItems
         
     }
     
