@@ -46,13 +46,13 @@ enum DeclarationPrefix {
 }
 
 // nested produces enum but is recursive and allows nesting (via associated values) instead of exactly one match
-// Each case includes a name, followed by the production that produces that case
+// Each case includes a name, followed by the RHS of the production that produces that case (the specified nonterminal always appears on the left)
 
 nested Type {
     
-    case function Type #-> Type                     // A 'Type' is a function from one 'Type' to another
-    case tuple Type -> #( [ Type | #, ] #)          // A 'Type' is a list of 'Type's separated by ','
-    case basic Type -> #identifier                  // A 'Type' is an identifier
+    case function Type #-> Type                 // A 'Type' is a function from one 'Type' to another
+    case tuple #( [ Type | #, ] #)              // A 'Type' is a list of 'Type's separated by ','
+    case basic #identifier                      // A 'Type' is an identifier
     
 }
 
@@ -60,8 +60,8 @@ nested Type {
 
 precedence Expression {
     
-    infix #+ , #-
-    infix #* , #/ , #%
+    infix #+ #-
+    infix #* #/ #%
     prefix #-
     
     : #( Expression #)

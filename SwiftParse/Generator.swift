@@ -14,15 +14,27 @@ class Generator {
         
         
         
-        let tokens = try lexer.lex(specification)
+        var tokens = try lexer.lex(specification)
+        
+        for index in 0 ..< tokens.count {
+            
+            if tokens[index].type == "terminal" {
+                tokens[index].content.removeFirst()
+            }
+            
+        }
         
         tokens.forEach {
             print($0)
         }
         
+        print("\nStatements:\n")
+        
         let statements = try parser.parse(tokens)
         
-        print(statements)
+        statements.forEach {
+            print($0)
+        }
         
         
     }
