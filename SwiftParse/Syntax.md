@@ -70,3 +70,5 @@ precedence Expression {
 }
 
 ```
+
+Note: Only the `nested` and `class` structures allow direct use of the list construct. This will probably change in a future version.

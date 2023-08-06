@@ -60,8 +60,6 @@ class LLParser {
             
             if let item = RhsItem(from: nextToken) {
                 enumCases.append(.item(item))
-            } else if ["[", "]", "|"].contains(nextToken.type) {
-                enumCases.append(.control(nextToken))
             } else {
                 throw ParseError.unexpected(found: nextToken.content, expected: "terminal or nonTerminal")
             }
@@ -153,7 +151,13 @@ class LLParser {
                 
                 index += 1
                 
-                let items = try collectItemsUntil(among: "infix", "prefix", "postfix", "}")
+                var items: [RhsItem] = []
+                
+                while notExhausted, let item = RhsItem(from: tokens[index]) {
+                    items.append(item)
+                    index += 1
+                }
+                
                 let group = PrecedenceGroup.root(rhs: items)
                 groups.append(group)
                 
@@ -255,6 +259,43 @@ class LLParser {
         var allowed = false
         var collected: [RhsComponent] = []
         
+        func parseList() throws -> RhsComponent {
+            
+            index += 1
+            
+            guard notExhausted else {
+                throw ParseError.exhausted(expected: "list description")
+            }
+            
+            guard let rhsItem = RhsItem(from: tokens[index]) else {
+                throw ParseError.unexpected(found: tokens[index].content, expected: "some RhsItem")
+            }
+            
+            index += 1
+            
+            guard notExhausted else {
+                throw ParseError.exhausted(expected: "list terminator or separator")
+            }
+            
+            if tokens[index].type == "]" {
+                return .list(repeating: rhsItem, separator: nil)
+            }
+            
+            guard index <= tokens.count - 2,
+                  tokens[index].type == "|",
+                  tokens[index + 1].type == "terminal",
+                  tokens[index + 2].type == "]" else {
+                throw ParseError.incomplete(expectedPattern: "| separator ]")
+            }
+            
+            let separator = tokens[index + 1].content
+            
+            index += 2
+            
+            return .list(repeating: rhsItem, separator: .terminal(type: separator))
+            
+        }
+        
         while notExhausted {
             
             let nextToken = tokens[index]
@@ -266,8 +307,8 @@ class LLParser {
             
             if let item = RhsItem(from: nextToken) {
                 collected.append(.item(item))
-            } else if ["[", "]", "|"].contains(nextToken.type) {
-                collected.append(.control(nextToken))
+            } else if nextToken.type == "[" {
+                try collected.append(parseList())
             } else {
                 throw ParseError.unexpected(found: nextToken.content, expected: "some RhsItem ...")
             }
@@ -346,5 +387,6 @@ enum ParseError: Error {
     
     case exhausted(expected: String)
     case unexpected(found: String, expected: String)
+    case incomplete(expectedPattern: String)
     
 }

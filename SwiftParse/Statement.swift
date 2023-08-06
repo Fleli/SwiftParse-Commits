@@ -40,14 +40,14 @@ enum StatementType: CustomStringConvertible {
 enum RhsComponent: CustomStringConvertible {
     
     case item(RhsItem)
-    case control(Token)
+    case list(repeating: RhsItem, separator: RhsItem?)
     
     var description: String {
         switch self {
         case .item(let rhsItem):
             return rhsItem.description
-        case .control(let token):
-            return token.type
+        case .list(let repeating, let separator):
+            return "[ \(repeating.description) | \(String(describing: separator?.description)) ]"
         }
     }
     
@@ -102,7 +102,7 @@ struct NestItem: CustomStringConvertible {
 enum PrecedenceGroup: CustomStringConvertible {
     
     case ordinary(type: OperatorPosition, operators: [RhsItem])
-    case root(rhs: [RhsComponent])
+    case root(rhs: [RhsItem])
     
     var description: String {
         switch self {
@@ -110,6 +110,15 @@ enum PrecedenceGroup: CustomStringConvertible {
             return type.rawValue + ": " + operators.description
         case .root(let rhs):
             return "root -> " + rhs.description
+        }
+    }
+    
+    var notRoot: Bool {
+        switch self {
+        case .ordinary(_, _):
+            return true
+        case .root(_):
+            return false
         }
     }
     

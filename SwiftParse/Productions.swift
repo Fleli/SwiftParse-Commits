@@ -9,12 +9,10 @@ extension StatementType {
         case .nested(let cases):
             return try Self.nestedCasesToString(cases, lhs)
         case .precedence(let groups):
-            fatalError()
+            return try Self.precedenceToString(groups, lhs)
         case .class(let elements):
             fatalError()
         }
-        
-        return lhs
         
     }
     
@@ -39,6 +37,7 @@ extension StatementType {
     private static func nestedCasesToString(_ cases: [NestItem], _ lhs: String) throws -> String {
         
         var string = ""
+        var lists = ""
         
         for nestItem in cases {
             
@@ -46,16 +45,77 @@ extension StatementType {
             
             for rhsComponent in nestItem.production {
                 
-                guard case .item(let rhsItem) = rhsComponent else {
-                    print(rhsComponent)
-                    fatalError()
+                if case .list(let repeating, let separator) = rhsComponent {
+                    
+                    let listName = repeating.swiftSLRToken + "LIST"
+                    
+                    string += listName + " "
+                    
+                    lists += "\(listName) -> \(listName) \(separator == nil ? "" : separator!.swiftSLRToken + " ")\(repeating.swiftSLRToken)\n"
+                    lists += "\(listName) -> \(repeating.swiftSLRToken)\n"
+                    
+                } else if case .item(let rhsItem) = rhsComponent {
+                    
+                    string += rhsItem.swiftSLRToken + " "
+                    
                 }
-                
-                string += rhsItem.swiftSLRToken + " "
                 
             }
             
             string += "\n"
+            
+        }
+        
+        return string + lists
+        
+    }
+    
+    private static func precedenceToString(_ groups: [PrecedenceGroup], _ lhs: String) throws -> String {
+        
+        var string = ""
+        
+        let lastGroup = groups.filter { $0.notRoot }.count
+        let rootPrefix = "CASE" + lastGroup.toLetters()
+        
+        for (index, group) in groups.enumerated() {
+            
+            let indexPrefix = index.toLetters()
+            let ntPrefix = index > 0 ? "CASE" + indexPrefix : ""
+            
+            switch group {
+            case .ordinary(let type, let operators):
+                
+                let autoLHS = ntPrefix + lhs
+                let nextLHS = "CASE" + (index + 1).toLetters() + lhs
+                
+                switch type {
+                case .prefix:
+                    
+                    for _operator in operators {
+                        string += autoLHS + " -> " + _operator.swiftSLRToken + " " + nextLHS + "\n"
+                    }
+                    
+                case .infix:
+                    
+                    for _operator in operators {
+                        string += autoLHS + " -> " + autoLHS + " " + _operator.swiftSLRToken + " " + nextLHS + "\n"
+                    }
+                    
+                case .postfix:
+                    
+                    for _operator in operators {
+                        string += autoLHS + " -> " + nextLHS + " " + _operator.swiftSLRToken + "\n"
+                    }
+                    
+                }
+                
+                string += autoLHS + " -> " + nextLHS + "\n"
+                
+            case .root(let rhs):
+                
+                string += rootPrefix + lhs + " -> " + rhs.produceSwiftSLRSyntax() + "\n"
+                
+            }
             
         }
         
