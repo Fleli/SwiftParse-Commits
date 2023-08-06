@@ -12,6 +12,7 @@
 		089B39762A7E9C8400DFA36C /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B39752A7E9C8400DFA36C /* Lexer.swift */; };
 		089B39782A7EA8DA00DFA36C /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B39772A7EA8DA00DFA36C /* Parser.swift */; };
 		089B397A2A7EA90E00DFA36C /* Statement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B39792A7EA90E00DFA36C /* Statement.swift */; };
+		089B397D2A7FACD000DFA36C /* Productions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B397C2A7FACD000DFA36C /* Productions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +36,8 @@
 		089B39752A7E9C8400DFA36C /* Lexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lexer.swift; sourceTree = "<group>"; };
 		089B39772A7EA8DA00DFA36C /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		089B39792A7EA90E00DFA36C /* Statement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statement.swift; sourceTree = "<group>"; };
+		089B397B2A7FA97700DFA36C /* Structure.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Structure.md; sourceTree = "<group>"; };
+		089B397C2A7FACD000DFA36C /* Productions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Productions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,10 +73,12 @@
 				089B39662A7E4F7600DFA36C /* main.swift */,
 				089B396F2A7E4FA100DFA36C /* Objectives.md */,
 				089B39722A7E559600DFA36C /* Syntax.md */,
+				089B397B2A7FA97700DFA36C /* Structure.md */,
 				089B39732A7E7EFC00DFA36C /* Generator.swift */,
 				089B39752A7E9C8400DFA36C /* Lexer.swift */,
 				089B39772A7EA8DA00DFA36C /* Parser.swift */,
 				089B39792A7EA90E00DFA36C /* Statement.swift */,
+				089B397C2A7FACD000DFA36C /* Productions.swift */,
 			);
 			path = SwiftParse;
 			sourceTree = "<group>";
@@ -138,6 +143,7 @@
 			files = (
 				089B39782A7EA8DA00DFA36C /* Parser.swift in Sources */,
 				089B39672A7E4F7600DFA36C /* main.swift in Sources */,
+				089B397D2A7FACD000DFA36C /* Productions.swift in Sources */,
 				089B397A2A7EA90E00DFA36C /* Statement.swift in Sources */,
 				089B39762A7E9C8400DFA36C /* Lexer.swift in Sources */,
 				089B39742A7E7EFC00DFA36C /* Generator.swift in Sources */,

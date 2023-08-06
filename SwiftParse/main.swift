@@ -17,7 +17,6 @@ enum DeclarationPrefix {
 
 nested Type {
     case function Type #-> Type
-    case tuple #( [ Type | #, ] #)
     case basic #identifier
 }
 

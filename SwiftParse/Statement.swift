@@ -6,6 +6,13 @@ struct Statement: CustomStringConvertible {
     
     var description: String { lhs + ": " + rhs.description }
     
+    func printString() throws {
+        
+        let string = try rhs.createProductions(with: lhs)
+        print(string)
+        
+    }
+    
 }
 
 enum StatementType: CustomStringConvertible {
@@ -55,6 +62,15 @@ enum RhsItem: CustomStringConvertible {
         switch self {
         case .terminal(let type):
             return type
+        case .nonTerminal(let name):
+            return name
+        }
+    }
+    
+    var swiftSLRToken: String {
+        switch self {
+        case .terminal(let type):
+            return "#" + type
         case .nonTerminal(let name):
             return name
         }

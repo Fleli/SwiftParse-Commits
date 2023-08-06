@@ -24,18 +24,17 @@ class Generator {
             
         }
         
-        tokens.forEach {
-            print($0)
-        }
-        
-        print("\nStatements:\n")
-        
         let statements = try parser.parse(tokens)
         
         statements.forEach {
             print($0)
         }
         
+        print("\n")
+        
+        for statement in statements {
+            try statement.printString()
+        }
         
     }
     
