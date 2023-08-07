@@ -11,7 +11,7 @@ The third and fourth steps use that specification to generate a (SwiftSLR) parse
  Step   | Input             | Output            | Description 
 --------|-------------------|-------------------|------------
 1       | `String`          | `[Token]`         | Produce tokens from the user's input (using SwiftLex) 
-2       | `[Token]`         | `[Statement]`     | Parse the tokens (simple recursive descent) and produce statements 
+2       | `[Token]`         | `[Statement]`     | Parse the tokens (recursive descent) and produce statements 
 3       | `[Statement]`     | `String`          | Produce a grammar from the SwiftParse specification
 4       | `String`          | `String`          | Feed the grammar into SwiftSLR to produce a parser 
 5       |                   |                   | 

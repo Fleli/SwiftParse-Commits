@@ -14,6 +14,7 @@
 		089B397A2A7EA90E00DFA36C /* Statement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B39792A7EA90E00DFA36C /* Statement.swift */; };
 		089B397D2A7FACD000DFA36C /* SwiftSLR Syntax.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B397C2A7FACD000DFA36C /* SwiftSLR Syntax.swift */; };
 		089B397F2A7FE4CA00DFA36C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B397E2A7FE4CA00DFA36C /* Extensions.swift */; };
+		089B39882A8191F700DFA36C /* build_ifStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B39872A8191F600DFA36C /* build_ifStatement.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,6 +41,7 @@
 		089B397E2A7FE4CA00DFA36C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		089B39802A81781300DFA36C /* Tree Conversion.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Tree Conversion.md"; sourceTree = "<group>"; };
 		089B39812A817B6900DFA36C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		089B39872A8191F600DFA36C /* build_ifStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = build_ifStatement.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				089B39802A81781300DFA36C /* Tree Conversion.md */,
+				089B39872A8191F600DFA36C /* build_ifStatement.swift */,
 			);
 			path = "Tree Conversion";
 			sourceTree = "<group>";
@@ -173,6 +176,7 @@
 				089B397D2A7FACD000DFA36C /* SwiftSLR Syntax.swift in Sources */,
 				089B397F2A7FE4CA00DFA36C /* Extensions.swift in Sources */,
 				089B397A2A7EA90E00DFA36C /* Statement.swift in Sources */,
+				089B39882A8191F700DFA36C /* build_ifStatement.swift in Sources */,
 				089B39762A7E9C8400DFA36C /* Lexer.swift in Sources */,
 				089B39742A7E7EFC00DFA36C /* Generator.swift in Sources */,
 			);
