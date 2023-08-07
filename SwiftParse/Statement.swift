@@ -8,7 +8,7 @@ struct Statement: CustomStringConvertible {
     
     func printString() throws {
         
-        let string = try rhs.createProductions(with: lhs)
+        let string = try rhs.convertToSwiftSLR(with: lhs)
         print(string)
         
     }
@@ -165,6 +165,17 @@ enum ClassItem: CustomStringConvertible {
         case .syntactical(let item):
             return item.description
         }
+    }
+    
+    var swiftSLRToken: String {
+        
+        switch self {
+        case .classField(_, let type):
+            return type.swiftSLRToken
+        case .syntactical(let item):
+            return item.swiftSLRToken
+        }
+        
     }
     
 }

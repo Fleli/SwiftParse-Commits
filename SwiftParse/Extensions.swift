@@ -50,3 +50,19 @@ extension [RhsItem] {
     }
     
 }
+
+extension [ClassItem] {
+    
+    func produceSwiftSLRSyntax() -> String {
+        
+        var string = ""
+        
+        for item in self {
+            string += item.swiftSLRToken + " "
+        }
+        
+        return string
+        
+    }
+    
+}

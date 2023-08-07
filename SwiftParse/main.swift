@@ -28,6 +28,16 @@ precedence Expression {
     : #identifier
 }
 
+class Declaration {
+    
+    ? var visibility: AccessControl
+    ! DeclarationPrefix
+    ! var name: #identifier
+    ? #: var type: Type
+    ? #= var value: Expression
+    ! #;
+    
+}
 """
 
 /*
