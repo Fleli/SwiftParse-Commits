@@ -12,25 +12,9 @@ class Generator {
     
     func createParser(from specification: String, named name: String, at path: String) throws {
         
-        
-        
-        var tokens = try lexer.lex(specification)
-        
-        for index in 0 ..< tokens.count {
-            
-            if tokens[index].type == "terminal" {
-                tokens[index].content.removeFirst()
-            }
-            
-        }
+        let tokens = try produceTokens(from: specification)
         
         let statements = try parser.parse(tokens)
-        
-        statements.forEach {
-            print($0)
-        }
-        
-        print("\n")
         
         for statement in statements {
             try statement.printString()
@@ -39,7 +23,17 @@ class Generator {
     }
     
     
-    
+    private func produceTokens(from input: String) throws -> [Token] {
+        
+        var tokens = try lexer.lex(input)
+        
+        for index in 0 ..< tokens.count {
+            if tokens[index].type == "terminal" { tokens[index].content.removeFirst() }
+        }
+        
+        return tokens
+        
+    }
     
     
 }

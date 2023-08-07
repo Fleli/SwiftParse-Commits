@@ -1,4 +1,6 @@
-# Structure
+# SwiftParse
+
+SwiftParse is an SLR parser generator. It offers a layer of abstraction over [https://github.com/Fleli/SwiftSLR].
 
 SwiftParse is divided into _n_ steps.
 
