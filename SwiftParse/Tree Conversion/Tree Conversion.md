@@ -1,13 +1,61 @@
 # Tree Conversion
 
-One of the main reasons why SwiftParse is easier to use than SwiftSLR, is that SwiftParse automatically converts the generic SLRNode tree into a tree of user-defined types. These types are deduced from the SwiftParse specification.
+## Overview
 
-SwiftSLR produces a tree of SLRNodes. It returns a single SLRNode with a number of children, each with a number of children themselves.
+Pure SwiftSLR produces a tree of `SLRNode` objects. It returns a single SLRNode with a number of children, each with a number of children themselves. SwiftParse uses the specification to automatically convert the generic SLRNode tree into a tree of user-defined types that are deduced from the classes, enums, etc. that the user specifies.
 
-The user-defined types appear as cases of a `UserDefinedType` enum. Each SLRNode object is extended with the function with the function `convertToUserDefinedType() throws -> UserDefinedType`, which recursively (bottom-up) converts the tree of generic SLRNode objects into a tree of user-defined types.
+## User-defined types
 
-The `convertToUserDefinedType() throws -> UserDefinedType` function is effectively organized as an `if - else if`-chain (it uses only `if` statements, but each statement contains a `return` statement and therefore does not fall through). Each `if` statement checks the node type, number of children and the type of each child of the given node. It therefore uniquely determines which production led to that node being created, and uses this to generate the correct user-defined type. One example of such an `if` statement (for the production `TypeLIST -> TypeLIST #, Type`)
+A 'user-defined type' is a type that the user declares in the SwiftParse specification. For instance, the grammar
+```
+enum DeclarationVisibility {
+    case #private
+    case #protected
+    case #public
+}
 
-    ```
-    if type == "TypeList"  &&  children.count == 3  &&  children[0].type == "TypeList"  &&  children[1].type == ","  &&  children[2].type == "Type" { ... }
-    ```
+enum DeclarationPrefix {
+    case #let
+    case #var
+}
+
+class Declaration {
+    ? var visibility: DeclarationVisibility
+    ! var keyword: DeclarationPrefix
+    ! var name: #identifier
+    ! #;
+}
+```
+will introduce the user-defined types `DeclarationVisibility`, `DeclarationPrefix` and `Declaration`.
+
+The grammar indicates that the `Declaration` class should contain the fields `visibility`, `keyword` and `name` of types `DeclarationVisibility`, `DeclarationPrefix` and `String`, respectively. Note that `name` is a `String` because all terminals should be stored as `String`s, whereas non-terminals are stored in dedicated (user-defined) types.
+
+Two productions are generated for the `Declaration` non-terminal since the `visibility` field is optional. Note that `visibility` is literally stored as an optional in Swift. This results in having multiple initializers for the `Declaration` class:
+
+```
+class Declaration {
+
+    let visibility: DeclarationVisibility?
+    let keyword: DeclarationPrefix
+    let name: String
+    
+    // Declaration -> DeclarationPrefix #identifier #;
+    init(_ keyword: DeclarationPrefix, _ name: String) {
+        self.visibility = nil
+        self.keyword = keyword
+        self.name = name
+    }
+    
+    // Declaration -> DeclarationVisibility DeclarationPrefix #identifier #; 
+    init(_ visibility: DeclarationVisibility, _ keyword: DeclarationPrefix, _ name: String) {
+        self.visibility = visibility
+        self.keyword = keyword
+        self.name = name
+    }
+    
+}
+```
+
+## Conversion
+
+To convert from an `SLRNode` tree into a tree of user-defined types, 

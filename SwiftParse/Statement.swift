@@ -7,20 +7,18 @@ struct Statement: CustomStringConvertible {
     var description: String { lhs + ": " + rhs.description }
     
     func printString() throws {
-        
         let string = try rhs.convertToSwiftSLR(with: lhs)
         print(string)
-        
     }
     
 }
 
 enum StatementType: CustomStringConvertible {
     
-    case `enum`(cases: [RhsComponent])
+    case `enum`(cases: [RhsItem])
     case nested(cases: [NestItem])
     case precedence(groups: [PrecedenceGroup])
-    case `class`(elements: [ClassElement])
+    case `class`(elements: [ClassElement], allProductions: [[ClassItem]])
     
     var description: String {
         switch self {
@@ -30,7 +28,7 @@ enum StatementType: CustomStringConvertible {
             return "nested of \(items)"
         case .precedence(let groups):
             return "precedence of \(groups)"
-        case .class(let elements):
+        case .class(let elements, _):
             return "class of \(elements)"
         }
     }

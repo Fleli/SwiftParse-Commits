@@ -14,7 +14,8 @@
 		089B397A2A7EA90E00DFA36C /* Statement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B39792A7EA90E00DFA36C /* Statement.swift */; };
 		089B397D2A7FACD000DFA36C /* SwiftSLR Syntax.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B397C2A7FACD000DFA36C /* SwiftSLR Syntax.swift */; };
 		089B397F2A7FE4CA00DFA36C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B397E2A7FE4CA00DFA36C /* Extensions.swift */; };
-		089B39882A8191F700DFA36C /* build_ifStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B39872A8191F600DFA36C /* build_ifStatement.swift */; };
+		08FD1F6E2A8425B400C124DA /* build_conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FD1F6D2A8425B400C124DA /* build_conversion.swift */; };
+		08FD1F702A84270F00C124DA /* All Class Productions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FD1F6F2A84270F00C124DA /* All Class Productions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,7 +42,8 @@
 		089B397E2A7FE4CA00DFA36C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		089B39802A81781300DFA36C /* Tree Conversion.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Tree Conversion.md"; sourceTree = "<group>"; };
 		089B39812A817B6900DFA36C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		089B39872A8191F600DFA36C /* build_ifStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = build_ifStatement.swift; sourceTree = "<group>"; };
+		08FD1F6D2A8425B400C124DA /* build_conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = build_conversion.swift; sourceTree = "<group>"; };
+		08FD1F6F2A84270F00C124DA /* All Class Productions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "All Class Productions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				089B397C2A7FACD000DFA36C /* SwiftSLR Syntax.swift */,
+				08FD1F6F2A84270F00C124DA /* All Class Productions.swift */,
 			);
 			path = "SwiftSLR Tasks";
 			sourceTree = "<group>";
@@ -108,7 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				089B39802A81781300DFA36C /* Tree Conversion.md */,
-				089B39872A8191F600DFA36C /* build_ifStatement.swift */,
+				08FD1F6D2A8425B400C124DA /* build_conversion.swift */,
 			);
 			path = "Tree Conversion";
 			sourceTree = "<group>";
@@ -171,13 +174,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08FD1F702A84270F00C124DA /* All Class Productions.swift in Sources */,
 				089B39782A7EA8DA00DFA36C /* Parser.swift in Sources */,
 				089B39672A7E4F7600DFA36C /* main.swift in Sources */,
 				089B397D2A7FACD000DFA36C /* SwiftSLR Syntax.swift in Sources */,
 				089B397F2A7FE4CA00DFA36C /* Extensions.swift in Sources */,
 				089B397A2A7EA90E00DFA36C /* Statement.swift in Sources */,
-				089B39882A8191F700DFA36C /* build_ifStatement.swift in Sources */,
 				089B39762A7E9C8400DFA36C /* Lexer.swift in Sources */,
+				08FD1F6E2A8425B400C124DA /* build_conversion.swift in Sources */,
 				089B39742A7E7EFC00DFA36C /* Generator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

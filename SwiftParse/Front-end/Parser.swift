@@ -40,7 +40,7 @@ class LLParser {
         
         index += 1
         
-        var enumCases: [RhsComponent] = []
+        var enumCases: [RhsItem] = []
         
         try assertNextIsAmong("nonTerminal")
         
@@ -59,7 +59,7 @@ class LLParser {
             let nextToken = tokens[index]
             
             if let item = RhsItem(from: nextToken) {
-                enumCases.append(.item(item))
+                enumCases.append(item)
             } else {
                 throw ParseError.unexpected(found: nextToken.content, expected: "terminal or nonTerminal")
             }
@@ -216,7 +216,9 @@ class LLParser {
             
         }
         
-        let statement = Statement(lhs: name, rhs: .class(elements: classElements))
+        let all = StatementType.findAllCombinations([], classElements)
+        
+        let statement = Statement(lhs: name, rhs: .class(elements: classElements, allProductions: all))
         statements.append(statement)
         
     }

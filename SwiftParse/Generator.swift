@@ -20,6 +20,10 @@ class Generator {
             try statement.printString()
         }
         
+        for statement in statements {
+            
+        }
+        
     }
     
     

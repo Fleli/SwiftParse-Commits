@@ -10,23 +10,19 @@ extension StatementType {
             return try Self.nestedCasesToString(cases, lhs)
         case .precedence(let groups):
             return try Self.precedenceToString(groups, lhs)
-        case .class(let elements):
+        case .class(let elements, _):
             return try Self.classToString(elements, lhs)
         }
         
     }
     
-    private static func enumCasesToString(_ cases: [RhsComponent], _ lhs: String) throws -> String {
+    private static func enumCasesToString(_ cases: [RhsItem], _ lhs: String) throws -> String {
         
         var string = ""
         
         for enumCase in cases {
             
-            guard case .item(let rhsItem) = enumCase else {
-                fatalError()
-            }
-            
-            string += lhs + " -> " + rhsItem.swiftSLRToken + "\n"
+            string += lhs + " -> " + enumCase.swiftSLRToken + "\n"
             
         }
         
@@ -134,45 +130,6 @@ extension StatementType {
         }
         
         return string
-        
-    }
-    
-    private static func findAllCombinations(_ combination: [ClassElement], _ remaining: [ClassElement]) -> [[ClassItem]] {
-        
-        if remaining.isEmpty {
-            
-            var returning: [[ClassItem]] = [[]]
-            
-            for element in combination {
-                returning[0] += element.classItems
-            }
-            
-            return returning
-            
-        }
-        
-        let next = remaining[0]
-        
-        if next.required {
-            
-            let updatedCombination = combination + [next]
-            let updatedRemaining = [ClassElement](remaining.dropFirst())
-            
-            return findAllCombinations(updatedCombination, updatedRemaining)
-            
-        } else {
-            
-            let remaining = [ClassElement](remaining.dropFirst())
-            
-            let option1 = combination
-            let result1 = findAllCombinations(option1, remaining)
-            
-            let option2 = combination + [next]
-            let result2 = findAllCombinations(option2, remaining)
-            
-            return result1 + result2
-            
-        }
         
     }
     
