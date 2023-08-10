@@ -3,15 +3,12 @@ let generator = Generator()
 let path = "/Users/frederikedvardsen/desktop/"
 
 let specification = """
-enum DeclarationVisibility {
-    case #private
-    case #protected
-    case Other
-}
-
-enum Other {
-    case #lol
-    case #mh
+nested Type {
+    
+    case function Type #-> Type
+    case tuple #( [ Type | #, ] #)
+    case basic #identifier
+    
 }
 """
 
@@ -20,3 +17,4 @@ enum Other {
  */
 
 try generator.createParser(from: specification, named: "parseFile", at: path)
+

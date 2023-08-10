@@ -20,6 +20,8 @@ class Generator {
             try statement.printString()
         }
         
+        // TODO: Finn alle liste-definisjoner og lag konverteringsfunksjoner for dem også.
+        
         for statement in statements {
             let typeString = try build_type(for: statement)
             let converter = try build_conversion(statement)

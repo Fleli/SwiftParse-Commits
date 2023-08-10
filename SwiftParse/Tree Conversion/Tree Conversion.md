@@ -58,4 +58,8 @@ class Declaration {
 
 ## Conversion
 
-To convert from an `SLRNode` tree into a tree of user-defined types, 
+When converting `enum`, one of two things happen:
+- If the case is a terminal, the type is simply stored as an enum case
+- If the case is a non-terminal, it is stored as an enum case with the given non-terminal's Swift type as an associated value
+
+When converting `nested`, all non-terminals are stored as associated values together with the `caseName`
