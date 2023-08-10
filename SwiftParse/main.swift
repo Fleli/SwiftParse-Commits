@@ -6,19 +6,12 @@ let specification = """
 enum DeclarationVisibility {
     case #private
     case #protected
-    case #public
+    case Other
 }
 
-enum DeclarationPrefix {
-    case #let
-    case #var
-}
-
-class Declaration {
-    ? var visibility: DeclarationVisibility
-    ! var keyword: DeclarationPrefix
-    ! var name: #identifier
-    ! #;
+enum Other {
+    case #lol
+    case #mh
 }
 """
 

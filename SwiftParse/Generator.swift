@@ -21,7 +21,10 @@ class Generator {
         }
         
         for statement in statements {
-            
+            let typeString = try build_type(for: statement)
+            let converter = try build_conversion(statement)
+            print(typeString)
+            print(converter)
         }
         
     }

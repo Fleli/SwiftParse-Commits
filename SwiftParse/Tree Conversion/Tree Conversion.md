@@ -34,7 +34,7 @@ Two productions are generated for the `Declaration` non-terminal since the `visi
 
 ```
 class Declaration {
-
+    
     let visibility: DeclarationVisibility?
     let keyword: DeclarationPrefix
     let name: String

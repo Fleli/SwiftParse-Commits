@@ -66,3 +66,46 @@ extension [ClassItem] {
     }
     
 }
+
+extension String {
+    
+    private static let swiftKeywords = [
+        "associativity", "async", "await", "break", "case", "catch", "class", "continue", "default", "defer",
+        "deinit", "do", "else", "enum", "extension", "false", "fileprivate", "final", "for", "func", "get",
+        "guard", "if", "import", "in", "infix", "init", "inout", "internal", "is", "lazy", "left", "let", "nil",
+        "none", "nonmutating", "open", "operator", "optional", "override", "postfix", "precedence", "prefix",
+        "private", "protocol", "public", "repeat", "required", "rethrows", "return", "right", "self", "set",
+        "static", "struct", "subscript", "super", "switch", "throw", "throws", "true", "try", "try?", "try!",
+        "typealias", "unowned", "var", "weak", "where", "while"
+    ]
+    
+    // TODO: Backtick self if Swift keyword
+    var nonColliding: String {
+        if Self.swiftKeywords.contains(self) {
+            return "`\(self)`"
+        } else {
+            return self
+        }
+    }
+    
+    var camelCased: String {
+        
+        guard let first = first else {
+            return ""
+        }
+        
+        return first.lowercased() + self[index(after: startIndex) ..< endIndex]
+        
+    }
+    
+    var CamelCased: String {
+        
+        guard let first = first else {
+            return ""
+        }
+        
+        return first.uppercased() + self[index(after: startIndex) ..< endIndex]
+        
+    }
+    
+}

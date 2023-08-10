@@ -16,6 +16,7 @@
 		089B397F2A7FE4CA00DFA36C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B397E2A7FE4CA00DFA36C /* Extensions.swift */; };
 		08FD1F6E2A8425B400C124DA /* build_conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FD1F6D2A8425B400C124DA /* build_conversion.swift */; };
 		08FD1F702A84270F00C124DA /* All Class Productions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FD1F6F2A84270F00C124DA /* All Class Productions.swift */; };
+		08FD1F722A855E2300C124DA /* build_types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FD1F712A855E2300C124DA /* build_types.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,6 +45,7 @@
 		089B39812A817B6900DFA36C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		08FD1F6D2A8425B400C124DA /* build_conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = build_conversion.swift; sourceTree = "<group>"; };
 		08FD1F6F2A84270F00C124DA /* All Class Productions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "All Class Productions.swift"; sourceTree = "<group>"; };
+		08FD1F712A855E2300C124DA /* build_types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = build_types.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 			children = (
 				089B39802A81781300DFA36C /* Tree Conversion.md */,
 				08FD1F6D2A8425B400C124DA /* build_conversion.swift */,
+				08FD1F712A855E2300C124DA /* build_types.swift */,
 			);
 			path = "Tree Conversion";
 			sourceTree = "<group>";
@@ -182,6 +185,7 @@
 				089B397A2A7EA90E00DFA36C /* Statement.swift in Sources */,
 				089B39762A7E9C8400DFA36C /* Lexer.swift in Sources */,
 				08FD1F6E2A8425B400C124DA /* build_conversion.swift in Sources */,
+				08FD1F722A855E2300C124DA /* build_types.swift in Sources */,
 				089B39742A7E7EFC00DFA36C /* Generator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
