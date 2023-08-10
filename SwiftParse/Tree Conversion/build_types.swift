@@ -67,6 +67,15 @@ extension Generator {
             
             func getLabel(_ expected: String) -> String {
                 
+                var expected = expected
+                
+                for c in expected {
+                    if !"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".contains(c) {
+                        expected = "_terminal"
+                        break
+                    }
+                }
+                
                 if let value = usedLabels[expected] {
                     usedLabels[expected]? += 1
                     return expected + "\(value)"
@@ -82,8 +91,9 @@ extension Generator {
                 switch rhsComponent {
                 case .item(let rhsItem):
                     switch rhsItem {
-                    case .terminal(_):
-                        continue
+                    case .terminal(let type):
+                        let label = getLabel(type)
+                        associatedValues.append((label: label, type: "String"))
                     case .nonTerminal(let name):
                         let label = getLabel(name.camelCased.nonColliding)
                         associatedValues.append((label: label, type: name.nonColliding))
