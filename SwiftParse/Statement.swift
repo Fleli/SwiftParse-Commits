@@ -6,8 +6,12 @@ struct Statement: CustomStringConvertible {
     
     var description: String { lhs + ": " + rhs.description }
     
+    func asSwiftSLR() throws -> String {
+        return try rhs.convertToSwiftSLR(with: lhs)
+    }
+    
     func printString() throws {
-        let string = try rhs.convertToSwiftSLR(with: lhs)
+        let string = try asSwiftSLR()
         print(string)
     }
     

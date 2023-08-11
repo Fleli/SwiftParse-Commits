@@ -33,7 +33,7 @@ extension Generator {
     }
     
     private func signature(for type: String) -> String {
-        return callSyntax(for: type) + " -> \(type.nonColliding)" + signatureSuffix
+        return callSyntax(for: type) + " -> \(type.nonColliding)"
     }
     
     private func firstLine(for type: String) -> String {
@@ -75,30 +75,18 @@ extension Generator {
         
         print("rhsItems:", cases)
         
-        var string = """
-            \(signature(for: lhs)) {
-                
-        
-        """
+        var string = "\t" + firstLine(for: lhs)
         
         for enumCase in cases {
             switch enumCase {
             case .terminal(let type):
-                string += """
-                        if type == "\(lhs)" && children[0].type == "\(type)" {
-                            return \(lhs).\(type.camelCased.nonColliding)
-                        }
-                        
-                
-                """
+                string += t2 + typeIs(lhs) + child(0, is: type) + "{" + l0 + t1 + "return \(lhs).\(type.camelCased.nonColliding)" + l0 + "}" + l0 + "\n"
             case .nonTerminal(let name):
                 string += """
-                        if type == "\(lhs)" && children[0].type == "\(name)" {
+                        \(typeIs(lhs))\(child(0, is: name)) {
                             let nonTerminalNode = children[0].convertTo\(name.nonColliding)()
                             return \(lhs.nonColliding).\(name.camelCased.nonColliding)(nonTerminalNode)
-                        }
-                        
-                
+                        }\(l0)\n
                 """
             }
         }
@@ -169,6 +157,8 @@ extension Generator {
             string += ifStatement + "\n"
             
         }
+        
+        string += t2 + "fatalError()\n\t\n\t}\n\t"
         
         return string
         

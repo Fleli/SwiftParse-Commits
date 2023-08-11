@@ -16,11 +16,16 @@ class Generator {
         
         let statements = try parser.parse(tokens)
         
+        var swiftSLRSpecificationFile = ""
+        
         for statement in statements {
-            try statement.printString()
+            try swiftSLRSpecificationFile.append(statement.asSwiftSLR())
         }
         
+        // TODO: Generer SLR parser fra SwiftSLR
         // TODO: Finn alle liste-definisjoner og lag konverteringsfunksjoner for dem også.
+        
+        print("\nSwiftSLR Specification\n--(begin)\n\(swiftSLRSpecificationFile)--(end)\n")
         
         for statement in statements {
             let typeString = try build_type(for: statement)

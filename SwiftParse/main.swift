@@ -3,6 +3,13 @@ let generator = Generator()
 let path = "/Users/frederikedvardsen/desktop/"
 
 let specification = """
+
+enum DeclarationPrefix {
+    case #let
+    case #var
+    case Type
+}
+
 nested Type {
     
     case function Type #-> Type
@@ -11,6 +18,10 @@ nested Type {
     
 }
 """
+
+/*
+ 
+ */
 
 try generator.createParser(from: specification, named: "parseFile", at: path)
 
