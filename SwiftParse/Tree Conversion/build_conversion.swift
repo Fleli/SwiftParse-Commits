@@ -8,6 +8,8 @@ extension Generator {
     
     private var signatureSuffix: String { " {\n\t\t\n" }
     
+    private var convertToTerminalCall: String { "convertToTerminal()" }
+    
     func build_conversion(_ statement: Statement) throws -> String {
         
         let lhs = statement.lhs
@@ -26,8 +28,16 @@ extension Generator {
         
     }
     
+    private func callSyntax(for type: String) -> String {
+        return "convertTo\(type.CamelCased)()"
+    }
+    
     private func signature(for type: String) -> String {
-        return "func convertTo\(type.CamelCased)() -> \(type.nonColliding)" + signatureSuffix
+        return callSyntax(for: type) + " -> \(type.nonColliding)" + signatureSuffix
+    }
+    
+    private func firstLine(for type: String) -> String {
+        return "func " + signature(for: type) + signatureSuffix
     }
     
     private func typeIs(_ expected: String) -> String {
@@ -40,6 +50,24 @@ extension Generator {
     
     private func childCountIs(_ count: Int) -> String {
         return " && children.count == \(count)"
+    }
+    
+    private func declaration(_ index: Int, _ component: RhsComponent) -> String {
+        
+        let prefix = "let arg\(index) = children[\(index)]."
+        
+        switch component {
+        case .item(let rhsItem):
+            switch rhsItem {
+            case .terminal(_):
+                return prefix + convertToTerminalCall
+            case .nonTerminal(let name):
+                return prefix + callSyntax(for: name)
+            }
+        case .list(let repeating, _):
+            return prefix + callSyntax(for: repeating.swiftSLRToken + "LIST")
+        }
+        
     }
     
     // If: "enum A { case p; case q; ... }", this function converts from the SLRNode with type 'A'. So this might return 'A.p'.
@@ -91,7 +119,7 @@ extension Generator {
         
         print("nestItems:", cases)
         
-        var string = "\t" + signature(for: lhs)
+        var string = "\t" + firstLine(for: lhs)
         
         for nestCase in cases {
             
@@ -101,9 +129,9 @@ extension Generator {
             var ifStatement = t2 + typeIs(lhs) + childCountIs(production.count)
             
             var declarations: [String] = []         // Hele declaration (Swift-statement)
-            var associatedValues: [String] = []     // Det som brukes for å konstruere enum-casen (argument)
             
             for (index, rhsComponent) in production.enumerated() {
+                
                 switch rhsComponent {
                 case .item(let rhsItem):
                     switch rhsItem {
@@ -115,7 +143,28 @@ extension Generator {
                 case .list(let repeating, _):
                     ifStatement += child(index, is: repeating.swiftSLRToken + "LIST")
                 }
+                
+                declarations.append(declaration(index, rhsComponent))
+                
             }
+            
+            ifStatement += " {" + l1
+            
+            for declaration in declarations {
+                ifStatement += t1 + declaration + l0
+            }
+            
+            ifStatement += t1 + l0 + t1 + "return \(lhs.nonColliding).\(caseName.nonColliding)("
+            
+            if declarations.count >= 2 {
+                for index in 0 ..< declarations.count - 1 {
+                    ifStatement += "arg\(index), "
+                }
+            }
+            
+            ifStatement += "arg\(declarations.count - 1))" + l1
+            
+            ifStatement += "}" + l0
             
             string += ifStatement + "\n"
             

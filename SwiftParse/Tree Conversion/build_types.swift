@@ -76,6 +76,8 @@ extension Generator {
                     }
                 }
                 
+                expected = "_ " + expected
+                
                 if let value = usedLabels[expected] {
                     usedLabels[expected]? += 1
                     return expected + "\(value)"
