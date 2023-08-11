@@ -76,7 +76,7 @@ extension String {
         "none", "nonmutating", "open", "operator", "optional", "override", "postfix", "precedence", "prefix",
         "private", "protocol", "public", "repeat", "required", "rethrows", "return", "right", "self", "set",
         "static", "struct", "subscript", "super", "switch", "throw", "throws", "true", "try", "try?", "try!",
-        "typealias", "unowned", "var", "weak", "where", "while"
+        "typealias", "unowned", "var", "weak", "where", "while", "Type", "Self"
     ]
     
     // TODO: Backtick self if Swift keyword

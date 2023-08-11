@@ -58,7 +58,7 @@ extension Generator {
             let caseName = nestItem.caseName
             let production = nestItem.production
             
-            string += "case " + nestItem.caseName.nonColliding
+            string += "case " + caseName.nonColliding
             
             var usedLabels: [String : Int] = [:]
             

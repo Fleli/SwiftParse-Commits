@@ -12,9 +12,5 @@ nested Type {
 }
 """
 
-/*
- 
- */
-
 try generator.createParser(from: specification, named: "parseFile", at: path)
 
