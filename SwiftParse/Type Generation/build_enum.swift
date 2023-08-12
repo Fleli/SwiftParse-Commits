@@ -2,7 +2,7 @@ extension Generator {
     
     func build_enum(_ lhs: String, _ cases: [RhsItem]) throws -> String {
         
-        var string = "enum \(lhs.nonColliding) {" + l0
+        var string = "enum \(lhs.nonColliding) {" + lt
         
         for enumCase in cases {
             
@@ -18,7 +18,7 @@ extension Generator {
                 suffix = "(" + name.CamelCased.nonColliding + ")"
             }
             
-            string += "case " + caseName.camelCased.nonColliding + suffix + l0
+            string += "case " + caseName.camelCased.nonColliding + suffix + lt
             
         }
         

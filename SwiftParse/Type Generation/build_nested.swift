@@ -2,7 +2,7 @@ extension Generator {
     
     func build_nested(_ lhs: String, _ cases: [NestItem]) throws -> String {
         
-        var string = "enum \(lhs.nonColliding) {" + l1
+        var string = "enum \(lhs.nonColliding) {" + lt + lt
         
         for nestItem in cases {
             
@@ -63,7 +63,7 @@ extension Generator {
                 string += "(" + associatedValuesString + ")"
             }
             
-            string += l0
+            string += lt
             
         }
         

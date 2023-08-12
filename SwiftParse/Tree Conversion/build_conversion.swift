@@ -34,7 +34,7 @@ extension Generator {
     }
     
     private func firstLine(for type: String) -> String {
-        return "func " + signature(for: type) + signatureSuffix
+        return "\tfunc " + signature(for: type) + signatureSuffix
     }
     
     private func typeIs(_ expected: String) -> String {
@@ -70,20 +70,18 @@ extension Generator {
     // If: "enum A { case p; case q; ... }", this function converts from the SLRNode with type 'A'. So this might return 'A.p'.
     private func build_conversion(_ lhs: String, _ cases: [RhsItem]) throws -> String {
         
-        print("rhsItems:", cases)
-        
-        var string = "\t" + firstLine(for: lhs)
+        var string = firstLine(for: lhs)
         
         for enumCase in cases {
             switch enumCase {
             case .terminal(let type):
-                string += t2 + typeIs(lhs) + child(0, is: type) + "{" + l0 + t1 + "return \(lhs).\(type.camelCased.nonColliding)" + l0 + "}" + l0 + "\n"
+                string += t2 + typeIs(lhs) + child(0, is: type) + "{" + lt + t1 + "return \(lhs).\(type.camelCased.nonColliding)" + lt + "}" + lt + "\n"
             case .nonTerminal(let name):
                 string += """
                         \(typeIs(lhs))\(child(0, is: name)) {
                             let nonTerminalNode = children[0].convertTo\(name.nonColliding)()
                             return \(lhs.nonColliding).\(name.camelCased.nonColliding)(nonTerminalNode)
-                        }\(l0)\n
+                        }\(lt)\n
                 """
             }
         }
@@ -102,9 +100,7 @@ extension Generator {
     // SLRNodes med type T hvor nested T er definert. Dvs returner en enum-case i enum-en T
     private func build_conversion(_ lhs: String, _ cases: [NestItem]) throws -> String {
         
-        print("nestItems:", cases)
-        
-        var string = "\t" + firstLine(for: lhs)
+        var string = firstLine(for: lhs)
         
         for nestCase in cases {
             
@@ -133,13 +129,13 @@ extension Generator {
                 
             }
             
-            ifStatement += " {" + l1
+            ifStatement += " {" + lt + lt
             
             for declaration in declarations {
-                ifStatement += t1 + declaration + l0
+                ifStatement += t1 + declaration + lt
             }
             
-            ifStatement += t1 + l0 + t1 + "return \(lhs.nonColliding).\(caseName.nonColliding)("
+            ifStatement += t1 + lt + t1 + "return \(lhs.nonColliding).\(caseName.nonColliding)("
             
             if declarations.count >= 2 {
                 for index in 0 ..< declarations.count - 1 {
@@ -147,9 +143,9 @@ extension Generator {
                 }
             }
             
-            ifStatement += "arg\(declarations.count - 1))" + l1
+            ifStatement += "arg\(declarations.count - 1))" + lt + lt
             
-            ifStatement += "}" + l0
+            ifStatement += "}" + lt
             
             string += ifStatement + "\n"
             
@@ -163,7 +159,65 @@ extension Generator {
     
     private func build_conversion(_ lhs: String, _ groups: [PrecedenceGroup]) throws -> String {
         
-        return ""
+        var string = firstLine(for: lhs)
+        
+        for (index, group) in groups.enumerated() {
+            
+            let prefix = (index > 0) ? "CASE" + index.toLetters() : ""
+            let nonTerminal = prefix + lhs
+            
+            switch group {
+            case .ordinary(let position, let operators):
+                
+                let nextPrefix = "CASE" + (index + 1).toLetters()
+                let nextNonTerminal = nextPrefix + lhs
+                
+                for `operator` in operators {
+                    
+                    // Steg 1: Konverter når parseren har sett at operasjonen faktisk utføres
+                    
+                    var ifStatement = "\t\t" + typeIs(nonTerminal)
+                    
+                    switch position {
+                    case .infix:
+                        ifStatement +=
+                            childCountIs(3)
+                        +   child(0, is: nonTerminal)
+                        +   child(1, is: `operator`.swiftSLRToken)
+                        +   child(2, is: nextNonTerminal)
+                        +   " {" + lttt + ltt
+                        +   "\tlet arg1 = children[0].convertTo\(nonTerminal)" + ltt
+                        +   "\tlet arg2 = children[2].convertTo\(nextNonTerminal)" + ltt
+                        +   "\treturn "
+                    case .prefix:
+                        ifStatement +=
+                            childCountIs(2)
+                        +   child(0, is: `operator`.swiftSLRToken)
+                        +   child(1, is: nextNonTerminal)
+                        +   " {" + ltt + ltt
+                    case .postfix:
+                        ifStatement +=
+                            childCountIs(2)
+                        +   child(0, is: nextNonTerminal)
+                        +   child(1, is: `operator`.swiftSLRToken)
+                        +   " {" + ltt + ltt
+                    }
+                    
+                    string += ifStatement + "}\n"
+                    
+                    // Steg 2: Konverter når den har "gått rett gjennom", dvs. f.eks. Expression -> CASEBExpression er brukt.
+                    
+                }
+                
+            case .root(let rhs):
+                
+                break
+                
+            }
+            
+        }
+        
+        return string
         
     }
     

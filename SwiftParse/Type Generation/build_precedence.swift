@@ -13,7 +13,7 @@ extension Generator {
         
         if twoArgumentNonRoots.count > 0 {
             
-            string += "\tenum InfixOperators {\n\t"
+            string += "\tenum InfixOperator {\n\t"
             
             for index in 0 ..< twoArgumentNonRoots.count {
                 string += "\tcase operator_\(index)\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
@@ -21,7 +21,7 @@ extension Generator {
             
             string += "}\n"
             
-            string += "\t\n\tcase infixOperator(InfixOperator, Expression, Expression)\n\t\n"
+            string += "\t\n\tcase infixOperator(InfixOperator, \(lhs), \(lhs))\n\t\n"
             
         }
         
@@ -29,13 +29,13 @@ extension Generator {
         
         if singleArgumentNonRoots.count > 0 {
             
-            string += "\tenum SingleArgumentOperators {\n\t"
+            string += "\tenum SingleArgumentOperator {\n\t"
             
             for index in 0 ..< singleArgumentNonRoots.count {
                 string += "\tcase operator_\(index)\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
             }
             
-            string += "}\n\t\n\tcase singleArgumentOperator(SingleArgumentOperators, Expression)\n\t\n"
+            string += "}\n\t\n\tcase singleArgumentOperator(SingleArgumentOperator, \(lhs))\n\t\n"
             
         }
         

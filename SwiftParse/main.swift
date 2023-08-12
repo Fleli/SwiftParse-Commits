@@ -14,9 +14,5 @@ precedence Expression {
 }
 """
 
-/*
- 
- */
-
 try generator.createParser(from: specification, named: "parseFile", at: path)
 

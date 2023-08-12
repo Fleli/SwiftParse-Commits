@@ -1,7 +1,8 @@
 extension Generator {
     
-    var l0: String { "\n\t" }
-    var l1: String { l0 + l0 }
+    var lt: String { "\n\t" }
+    var ltt: String { lt + "\t" }
+    var lttt: String { ltt + "\t" }
     
     func build_type(for statement: Statement) throws -> String {
         
