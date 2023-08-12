@@ -19,9 +19,9 @@ extension Generator {
                 string += "\tcase operator_\(index)\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
             }
             
-            string += "}\n\t\n"
+            string += "}\n"
             
-            string += "\t\n\tcase infixOperator(InfixOperator, Expression, Expression)\n"
+            string += "\t\n\tcase infixOperator(InfixOperator, Expression, Expression)\n\t\n"
             
         }
         
@@ -35,9 +35,7 @@ extension Generator {
                 string += "\tcase operator_\(index)\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
             }
             
-            string += "}\n\t\n"
-            
-            string += "\t\n\tcase singleArgumentOperator(SingleArgumentOperators, Expression)\n"
+            string += "}\n\t\n\tcase singleArgumentOperator(SingleArgumentOperators, Expression)\n\t\n"
             
         }
         
@@ -51,6 +49,8 @@ extension Generator {
             }
             
         }
+        
+        string += "\n}\n"
         
         return string
         
