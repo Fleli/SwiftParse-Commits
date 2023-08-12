@@ -161,6 +161,9 @@ extension Generator {
         
         var string = firstLine(for: lhs)
         
+        var infixOperatorCount = 0
+        var singleArgOperatorCount = 0
+        
         for (index, group) in groups.enumerated() {
             
             let prefix = (index > 0) ? "CASE" + index.toLetters() : ""
@@ -180,32 +183,59 @@ extension Generator {
                     
                     switch position {
                     case .infix:
+                        
                         ifStatement +=
                             childCountIs(3)
                         +   child(0, is: nonTerminal)
                         +   child(1, is: `operator`.swiftSLRToken)
                         +   child(2, is: nextNonTerminal)
-                        +   " {" + lttt + ltt
-                        +   "\tlet arg1 = children[0].convertTo\(nonTerminal)" + ltt
-                        +   "\tlet arg2 = children[2].convertTo\(nextNonTerminal)" + ltt
-                        +   "\treturn "
+                        +   " {" + lttt + lttt
+                        +   "let arg1 = children[0].convertTo\(nonTerminal)()" + lttt
+                        +   "let arg2 = children[2].convertTo\(nextNonTerminal)()" + lttt
+                        +   "return .infixOperator(.operator_\(infixOperatorCount), arg1, arg2)" + lttt + ltt
+                        
+                        infixOperatorCount += 1
+                        
                     case .prefix:
+                        
                         ifStatement +=
                             childCountIs(2)
                         +   child(0, is: `operator`.swiftSLRToken)
                         +   child(1, is: nextNonTerminal)
-                        +   " {" + ltt + ltt
+                        +   " {" + lttt + lttt
+                        +   "let arg = children[1].convertTo\(nextNonTerminal)()" + lttt
+                        +   "return .singleArgumentOperator(.operator_\(singleArgOperatorCount), arg)" + lttt + ltt
+                        
+                        singleArgOperatorCount += 1
+                        
                     case .postfix:
+                        
                         ifStatement +=
                             childCountIs(2)
                         +   child(0, is: nextNonTerminal)
                         +   child(1, is: `operator`.swiftSLRToken)
-                        +   " {" + ltt + ltt
+                        +   " {" + lttt + lttt
+                        +   "let arg = children[0].convertTo\(nextNonTerminal)()" + lttt
+                        +   "return .singleArgumentOperator(.operator_\(singleArgOperatorCount), arg)" + lttt + ltt
+                        
+                        singleArgOperatorCount += 1
+                        
                     }
                     
-                    string += ifStatement + "}\n"
+                    string += ifStatement + "}" + ltt + "\n"
                     
                     // Steg 2: Konverter når den har "gått rett gjennom", dvs. f.eks. Expression -> CASEBExpression er brukt.
+                    
+                    let nextIfStatement =
+                        "\t\t"
+                    +   typeIs(nonTerminal)
+                    +   childCountIs(1)
+                    +   child(0, is: nextNonTerminal)
+                    +   " {" + lttt + lttt
+                    +   "return children[0].convertTo\(lhs)()" + lttt + ltt
+                    +   "}" + ltt + "\n"
+                    
+                    string += nextIfStatement
                     
                 }
                 

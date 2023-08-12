@@ -9,6 +9,7 @@ precedence Expression {
     infix #+
     infix #*
     prefix #-
+    postfix #mh
     : #identifier
     : #( Expression #)
 }
