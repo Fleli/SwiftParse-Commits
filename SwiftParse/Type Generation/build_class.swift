@@ -49,7 +49,6 @@ extension Generator {
         init(_ allFields: [ClassField], _ chosenFields: [ClassField]) {
             self.allFields = allFields
             self.chosenFields = chosenFields
-            print("init:", allFields, chosenFields)
         }
         
     }

@@ -1,5 +1,6 @@
 
 // TODO: Endre syntax på precedence betydelig slik at argument labels og casenames blir bedre.
+// Merk: Mange av generator-funksjonene har veldig lik form. Kan være et hint om at det er mulig å generalisere de ulike statements og få til både mer funksjonalitet og ryddigere kode i en senere versjon. Undersøk nærmere ...
 
 let generator = Generator()
 let path = "/Users/frederikedvardsen/desktop/"

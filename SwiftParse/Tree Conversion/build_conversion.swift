@@ -79,7 +79,7 @@ extension Generator {
             case .nonTerminal(let name):
                 string += """
                         \(typeIs(lhs))\(child(0, is: name)) {
-                            let nonTerminalNode = children[0].convertTo\(name.nonColliding)()
+                            let nonTerminalNode = children[0]\(callSyntax(for: name))()
                             return \(lhs.nonColliding).\(name.camelCased.nonColliding)(nonTerminalNode)
                         }\(lt)\n
                 """
@@ -243,8 +243,6 @@ extension Generator {
                 let rootPrefix = "CASE" + lastGroup.toLetters()
                 let nonTerminal = rootPrefix + lhs
                 
-                print(nonTerminal)
-                
                 var declarations: [String] = []
                 
                 var ifStatement =
@@ -297,7 +295,52 @@ extension Generator {
     
     private func build_conversion(_ lhs: String, _ elements: [ClassElement], _ allProductions: [[ClassItem]]) throws -> String {
         
-        return ""
+        var string = firstLine(for: lhs)
+        
+        
+        for production in allProductions {
+            
+            var ifStatement = "\t\t" + typeIs(lhs) + childCountIs(production.count)
+            var argumentDeclarations: [String] = []
+            var initArgs: [String] = []
+            
+            for (index, classItem) in production.enumerated() {
+                
+                initArgs.append("arg\(index)")
+                
+                switch classItem {
+                case .classField(_, let type):
+                    
+                    switch type {
+                    case .terminal(let type):
+                        ifStatement += child(index, is: type)
+                        argumentDeclarations.append("let arg\(index) = children[\(index)].\(convertToTerminalCall)")
+                    case .nonTerminal(let name):
+                        ifStatement += child(index, is: type.swiftSLRNodeName)
+                        argumentDeclarations.append("let arg\(index) = children[\(index)].\(callSyntax(for: name))")
+                    }
+                    
+                case .syntactical(let item):
+                    ifStatement += child(index, is: item.swiftSLRNodeName)
+                    argumentDeclarations.append("let arg\(index) = children[\(index)].\(convertToTerminalCall)")
+                }
+                
+            }
+            
+            ifStatement += " {\n"
+            
+            argumentDeclarations.forEach { ifStatement += "\t\t\t" + $0 + "\n" }
+            
+            ifStatement += "\t\t\treturn .init(" + initArgs.convertToList(", ") + ")\n\t\t}\n"
+            
+            string += "\t\t\n" + ifStatement + "\n"
+            
+        }
+        
+        
+        string += "\tfatalError()\n\t\n\t}\n"
+        
+        return string
         
     }
     

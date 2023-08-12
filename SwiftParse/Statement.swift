@@ -78,6 +78,15 @@ enum RhsItem: CustomStringConvertible {
         }
     }
     
+    var swiftSLRNodeName: String {
+        switch self {
+        case .terminal(let type):
+            return type
+        case .nonTerminal(let name):
+            return name
+        }
+    }
+    
     init?(from token: Token) {
         
         if token.type == "terminal" {

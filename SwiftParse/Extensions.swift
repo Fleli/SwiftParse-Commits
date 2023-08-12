@@ -114,7 +114,6 @@ extension String {
         
         for c in self {
             if !"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".contains(c) {
-                print("Returning", backup, "on", self)
                 return backup
             }
         }

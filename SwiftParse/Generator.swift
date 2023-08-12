@@ -32,8 +32,10 @@ class Generator {
             let typeString = try build_type(for: statement)
             let converter = try build_conversion(statement)
             print(typeString)
-            print(converter)
+            print("extension SLRNode {\n\n\(converter)\n}")
         }
+        
+        print(build_convertToTerminal())
         
     }
     
