@@ -24,6 +24,7 @@ class Generator {
         
         // TODO: Generer SLR parser fra SwiftSLR
         // TODO: Finn alle liste-definisjoner og lag konverteringsfunksjoner for dem også.
+        // TODO: Lag convertToTerminal()-funksjon
         
         print("\nSwiftSLR Specification\n--(begin)\n\(swiftSLRSpecificationFile)--(end)\n")
         

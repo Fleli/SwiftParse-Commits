@@ -6,8 +6,8 @@ let path = "/Users/frederikedvardsen/desktop/"
 
 let specification = """
 precedence Expression {
-    infix #+
-    infix #*
+    infix #+ #-
+    infix #* #/ #%
     prefix #-
     postfix #mh
     : #identifier
