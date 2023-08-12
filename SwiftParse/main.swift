@@ -5,14 +5,24 @@ let generator = Generator()
 let path = "/Users/frederikedvardsen/desktop/"
 
 let specification = """
-precedence Expression {
-    infix #+ #-
-    infix #* #/ #%
-    prefix #-
-    postfix #mh
-    : #identifier
-    : #( Expression #)
+
+enum Visibility {
+    case #private
+    case #public
 }
+
+nested Type {
+    case basic #identifier
+}
+
+class Declaration {
+    
+    ? var visibility: Visibility
+    ! var name: #identifier
+    ? var type: Type
+    
+}
+
 """
 
 try generator.createParser(from: specification, named: "parseFile", at: path)

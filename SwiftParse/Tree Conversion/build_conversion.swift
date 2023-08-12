@@ -75,7 +75,7 @@ extension Generator {
         for enumCase in cases {
             switch enumCase {
             case .terminal(let type):
-                string += t2 + typeIs(lhs) + child(0, is: type) + "{" + lt + t1 + "return \(lhs).\(type.camelCased.nonColliding)" + lt + "}" + lt + "\n"
+                string += t2 + typeIs(lhs) + child(0, is: type) + " {" + lt + t1 + "return \(lhs).\(type.camelCased.nonColliding)" + lt + "}" + lt + "\n"
             case .nonTerminal(let name):
                 string += """
                         \(typeIs(lhs))\(child(0, is: name)) {

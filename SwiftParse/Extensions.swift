@@ -1,3 +1,5 @@
+import Foundation
+
 extension Int {
     
     func toLetters() -> String {
@@ -112,11 +114,34 @@ extension String {
         
         for c in self {
             if !"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".contains(c) {
+                print("Returning", backup, "on", self)
                 return backup
             }
         }
         
         return self
+        
+    }
+    
+}
+
+extension Array where Element: CustomStringConvertible {
+    
+    func convertToList(_ separator: String) -> String {
+        
+        var string = ""
+        
+        for (index, element) in enumerated() {
+            
+            string += element.description
+            
+            if index < count - 1 {
+                string += "\(separator)"
+            }
+            
+        }
+        
+        return string
         
     }
     

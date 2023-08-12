@@ -198,4 +198,13 @@ enum ClassItem: CustomStringConvertible {
         
     }
     
+    var asClassField: (name: String, type: RhsItem)? {
+        switch self {
+        case .classField(let name, let type):
+            return (name, type)
+        case .syntactical(_):
+            return nil
+        }
+    }
+    
 }
