@@ -108,4 +108,16 @@ extension String {
         
     }
     
+    func changeToSwiftIdentifier(use backup: String) -> String {
+        
+        for c in self {
+            if !"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".contains(c) {
+                return backup
+            }
+        }
+        
+        return self
+        
+    }
+    
 }

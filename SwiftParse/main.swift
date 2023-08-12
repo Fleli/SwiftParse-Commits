@@ -1,21 +1,16 @@
 
+// TODO: Endre syntax på precedence betydelig slik at argument labels og casenames blir bedre.
+
 let generator = Generator()
 let path = "/Users/frederikedvardsen/desktop/"
 
 let specification = """
-
-enum DeclarationPrefix {
-    case #let
-    case #var
-    case Type
-}
-
-nested Type {
-    
-    case function Type #-> Type
-    case tuple #( [ Type | #, ] #)
-    case basic #identifier
-    
+precedence Expression {
+    infix #+
+    infix #*
+    prefix #-
+    : #identifier
+    : #( Expression #)
 }
 """
 

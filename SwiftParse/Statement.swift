@@ -124,6 +124,24 @@ enum PrecedenceGroup: CustomStringConvertible {
         }
     }
     
+    var isInfix: Bool {
+        switch self {
+        case .ordinary(.infix, _):
+            return true
+        default:
+            return false
+        }
+    }
+    
+    var isSingleArgument: Bool {
+        switch self {
+        case .ordinary(.prefix, _), .ordinary(type: .postfix, _):
+            return true
+        default:
+            return false
+        }
+    }
+    
 }
 
 enum OperatorPosition: String {

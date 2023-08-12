@@ -3,9 +3,6 @@ extension Generator {
     private var t1: String { "\t" }
     private var t2: String { t1 + t1 }
     
-    private var l0: String { "\n" + t2 }
-    private var l1: String { l0 + l0 }
-    
     private var signatureSuffix: String { " {\n\t\t\n" }
     
     private var convertToTerminalCall: String { "convertToTerminal()" }
