@@ -3,6 +3,7 @@ extension Generator {
     func build_convertToTerminal() -> String {
         
         return """
+        
         extension SLRNode {
         
             func convertToTerminal() -> String {
@@ -16,6 +17,7 @@ extension Generator {
             }
             
         }
+        
         """
         
     }

@@ -75,7 +75,13 @@ extension Generator {
         for enumCase in cases {
             switch enumCase {
             case .terminal(let type):
-                string += t2 + typeIs(lhs) + child(0, is: type) + " {" + lt + t1 + "return \(lhs).\(type.camelCased.nonColliding)" + lt + "}" + lt + "\n"
+                string += """
+                        \(typeIs(lhs) + child(0, is: type)) {
+                            return \(lhs).\(type.camelCased.nonColliding)
+                        }
+                        
+                
+                """
             case .nonTerminal(let name):
                 string += """
                         \(typeIs(lhs))\(child(0, is: name)) {
@@ -129,13 +135,13 @@ extension Generator {
                 
             }
             
-            ifStatement += " {" + lt + lt
+            ifStatement += " {" + ltt
             
             for declaration in declarations {
-                ifStatement += t1 + declaration + lt
+                ifStatement += t1 + declaration + ltt
             }
             
-            ifStatement += t1 + lt + t1 + "return \(lhs.nonColliding).\(caseName.nonColliding)("
+            ifStatement += t1 + "return \(lhs.nonColliding).\(caseName.nonColliding)("
             
             if declarations.count >= 2 {
                 for index in 0 ..< declarations.count - 1 {
@@ -143,7 +149,7 @@ extension Generator {
                 }
             }
             
-            ifStatement += "arg\(declarations.count - 1))" + lt + lt
+            ifStatement += "arg\(declarations.count - 1))" + ltt
             
             ifStatement += "}" + lt
             
@@ -297,7 +303,6 @@ extension Generator {
         
         var string = firstLine(for: lhs)
         
-        
         for production in allProductions {
             
             var ifStatement = "\t\t" + typeIs(lhs) + childCountIs(production.count)
@@ -331,14 +336,13 @@ extension Generator {
             
             argumentDeclarations.forEach { ifStatement += "\t\t\t" + $0 + "\n" }
             
-            ifStatement += "\t\t\treturn .init(" + initArgs.convertToList(", ") + ")\n\t\t}\n"
+            ifStatement += "\t\t\treturn .init(" + initArgs.convertToList(", ") + ")\n\t\t}\n\t\t"
             
-            string += "\t\t\n" + ifStatement + "\n"
+            string += ifStatement + "\n"
             
         }
         
-        
-        string += "\tfatalError()\n\t\n\t}\n"
+        string += "\t\tfatalError()\n\t\t\n\t}\n"
         
         return string
         
