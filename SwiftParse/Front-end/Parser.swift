@@ -6,11 +6,15 @@ class LLParser {
     
     private var notExhausted: Bool { index < tokens.count }
     
-    func parse(_ tokens: [Token]) throws -> [Statement] {
+    private var generator: Generator!
+    
+    func parse(_ tokens: [Token], _ generator: Generator) throws -> [Statement] {
         
         self.index = 0
         self.tokens = tokens
         self.statements = []
+        
+        self.generator = generator
         
         while notExhausted {
             
@@ -280,6 +284,7 @@ class LLParser {
             }
             
             if tokens[index].type == "]" {
+                generator.insertList(of: rhsItem, with: nil)
                 return .list(repeating: rhsItem, separator: nil)
             }
             
@@ -294,6 +299,7 @@ class LLParser {
             
             index += 2
             
+            generator.insertList(of: rhsItem, with: .terminal(type: separator))
             return .list(repeating: rhsItem, separator: .terminal(type: separator))
             
         }

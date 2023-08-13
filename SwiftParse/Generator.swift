@@ -3,6 +3,20 @@ class Generator {
     let lexer = Lexer()
     let parser = LLParser()
     
+    struct List: Hashable {
+        
+        let repeatingItem: RhsItem
+        let separator: RhsItem?
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(repeatingItem)
+            hasher.combine(separator)
+        }
+        
+    }
+    
+    private var lists: Set<List> = []
+    
     init() {
         
         print("init", self)
@@ -14,7 +28,7 @@ class Generator {
         
         let tokens = try produceTokens(from: specification)
         
-        let statements = try parser.parse(tokens)
+        let statements = try parser.parse(tokens, self)
         
         var swiftSLRSpecificationFile = ""
         
@@ -22,9 +36,39 @@ class Generator {
             try swiftSLRSpecificationFile.append(statement.asSwiftSLR())
         }
         
-        // TODO: Generer SLR parser fra SwiftSLR
+        for list in lists {
+            let nodeName = list.repeatingItem.swiftSLRNodeName
+            let separator = (list.separator?.swiftSLRToken ?? "") + " "
+            swiftSLRSpecificationFile.append(nodeName + "LIST -> " + nodeName + "LIST " + separator + nodeName + "\n")
+            swiftSLRSpecificationFile.append(nodeName + "LIST -> " + nodeName + "\n")
+            print("""
+            extension SLRNode {
+                
+                func convertTo\(nodeName.CamelCased)LIST() -> [\(nodeName.nonColliding)] {
+                    
+                    if children.count == 1 {
+                        return [children[0].convertTo\(nodeName.CamelCased)()]
+                    }
+                    
+                    if children.count == 2 {
+                        return children[0].convertTo\(nodeName.CamelCased)LIST() + [children[1].convertTo\(nodeName.CamelCased)()]
+                    }
+                    
+                    if children.count == 3 {
+                        return children[0].convertTo\(nodeName.CamelCased)LIST() + [children[2].convertTo\(nodeName.CamelCased)()]
+                    }
+                    
+                    fatalError()
+                    
+                }
+                
+            }
+            
+            """)
+        }
+        
+        // TODO: Generer SLR-parser med SwiftSLR
         // TODO: Finn alle liste-definisjoner og lag konverteringsfunksjoner for dem også.
-        // TODO: Lag convertToTerminal()-funksjon
         
         print("\nSwiftSLR Specification\n--(begin)\n\(swiftSLRSpecificationFile)--(end)\n")
         
@@ -36,6 +80,8 @@ class Generator {
         }
         
         print(build_convertToTerminal())
+        
+        print("\nLISTS:", lists)
         
     }
     
@@ -50,6 +96,11 @@ class Generator {
         
         return tokens
         
+    }
+    
+    
+    func insertList(of repeating: RhsItem, with separator: RhsItem?) {
+        lists.insert(.init(repeatingItem: repeating, separator: separator))
     }
     
     

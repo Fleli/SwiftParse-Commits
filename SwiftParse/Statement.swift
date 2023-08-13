@@ -55,7 +55,7 @@ enum RhsComponent: CustomStringConvertible {
     
 }
 
-enum RhsItem: CustomStringConvertible {
+enum RhsItem: CustomStringConvertible, Hashable {
     
     case terminal(type: String)
     case nonTerminal(name: String)
