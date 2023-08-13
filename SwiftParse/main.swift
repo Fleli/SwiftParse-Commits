@@ -9,25 +9,87 @@ let path = "/Users/frederikedvardsen/desktop/"
 
 let specification = """
 
+@main Main
+
+nested Main {
+    case list [ Statement ]
+}
+
+enum Statement {
+    case Declaration
+    case Return
+    case Assignment
+}
+
 enum Visibility {
     case #private
+    case #protected
     case #public
 }
 
 nested Type {
-    case tuple #( [ Type | #, ] #)
     case basic #identifier
+    case function Type #-> Type
+    case tuple #( [ Type | #, ] #)
+}
+
+enum DeclarationKeyword {
+    case #let
+    case #var
+}
+
+class Return {
+    ! #return
+    ? var expression: Expression
+    ! #;
+}
+
+class Assignment {
+    ! var lhs: #identifier
+    ! #=
+    ! var rhs: Expression
+    ! #;
 }
 
 class Declaration {
-    
     ? var visibility: Visibility
+    ! var keyword: DeclarationKeyword
     ! var name: #identifier
-    ? var type: Type
-    
+    ? #: var type: Type
+    ? #= var value: Expression
+}
+
+precedence Expression {
+    infix #||
+    infix #&&
+    infix #|
+    infix #^
+    infix #&
+    infix #== #!=
+    infix #>= #<= #> #<
+    infix #+ #-
+    infix #* #/ #%
+    prefix #-
+    : #identifier
+    : #( Expression #)
+    : Closure
+}
+
+class Closure {
+    ! #{
+    ? #: Type #;
+    ! var list: Main
+    ! #}
 }
 
 """
 
-try generator.createParser(from: specification, named: "parseFile", at: path)
-
+do {
+    
+    try generator.createParser(from: specification, at: path)
+    
+} catch {
+    
+    print(error)
+    
+}

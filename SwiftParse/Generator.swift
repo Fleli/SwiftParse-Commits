@@ -1,3 +1,5 @@
+import Foundation
+
 class Generator {
     
     let lexer = Lexer()
@@ -17,31 +19,60 @@ class Generator {
     
     private var lists: Set<List> = []
     
-    init() {
-        
-        print("init", self)
-        
-    }
-    
-    
-    func createParser(from specification: String, named name: String, at path: String) throws {
+    func createParser(from specification: String, at path: String) throws {
         
         let tokens = try produceTokens(from: specification)
         
         let statements = try parser.parse(tokens, self)
         
-        var swiftSLRSpecificationFile = ""
+        var swiftSLRSpecificationFile = "Program -> \(statements.mainItem.swiftSLRToken)\n"
         
-        for statement in statements {
+        for statement in statements.statements {
             try swiftSLRSpecificationFile.append(statement.asSwiftSLR())
         }
+        
+        var types = ""
+        var converters = ""
         
         for list in lists {
             let nodeName = list.repeatingItem.swiftSLRNodeName
             let separator = (list.separator?.swiftSLRToken ?? "") + " "
             swiftSLRSpecificationFile.append(nodeName + "LIST -> " + nodeName + "LIST " + separator + nodeName + "\n")
             swiftSLRSpecificationFile.append(nodeName + "LIST -> " + nodeName + "\n")
-            print("""
+            converters += generateListConverter(nodeName, separator)
+        }
+        
+        // TODO: Generer SLR-parser med SwiftSLR
+        
+        for statement in statements.statements {
+            types += try build_type(for: statement)
+            converters += try "extension SLRNode {\n\n\(build_conversion(statement))\n}"
+        }
+        
+        converters += build_convertToTerminal()
+        
+        writeToFile(content: types, at: path + "/" + "Types.swift")
+        writeToFile(content: converters, at: path + "/" + "Converters.swift")
+        
+        print("\nSwiftSLR Specification\n--(begin)\n\(swiftSLRSpecificationFile)--(end)\n")
+        
+    }
+    
+    
+    private func produceTokens(from input: String) throws -> [Token] {
+        
+        var tokens = try lexer.lex(input)
+        
+        for index in 0 ..< tokens.count {
+            if tokens[index].type == "terminal" { tokens[index].content.removeFirst() }
+        }
+        
+        return tokens
+        
+    }
+    
+    private func generateListConverter(_ nodeName: String, _ separator: String) -> String {
+        return """
             extension SLRNode {
                 
                 func convertTo\(nodeName.CamelCased)LIST() -> [\(nodeName.nonColliding)] {
@@ -64,44 +95,19 @@ class Generator {
                 
             }
             
-            """)
-        }
-        
-        // TODO: Generer SLR-parser med SwiftSLR
-        // TODO: Finn alle liste-definisjoner og lag konverteringsfunksjoner for dem også.
-        
-        print("\nSwiftSLR Specification\n--(begin)\n\(swiftSLRSpecificationFile)--(end)\n")
-        
-        for statement in statements {
-            let typeString = try build_type(for: statement)
-            let converter = try build_conversion(statement)
-            print(typeString)
-            print("extension SLRNode {\n\n\(converter)\n}")
-        }
-        
-        print(build_convertToTerminal())
-        
-        print("\nLISTS:", lists)
-        
+            """
     }
-    
-    
-    private func produceTokens(from input: String) throws -> [Token] {
-        
-        var tokens = try lexer.lex(input)
-        
-        for index in 0 ..< tokens.count {
-            if tokens[index].type == "terminal" { tokens[index].content.removeFirst() }
-        }
-        
-        return tokens
-        
-    }
-    
     
     func insertList(of repeating: RhsItem, with separator: RhsItem?) {
         lists.insert(.init(repeatingItem: repeating, separator: separator))
     }
     
+    func writeToFile(content: String, at path: String) {
+        
+        let fileManager = FileManager()
+        let didCreate = fileManager.createFile(atPath: path, contents: content.data(using: .utf8))
+        print("didCreate:", didCreate)
+        
+    }
     
 }

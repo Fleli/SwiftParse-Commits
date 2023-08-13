@@ -85,7 +85,7 @@ extension Generator {
             case .nonTerminal(let name):
                 string += """
                         \(typeIs(lhs))\(child(0, is: name)) {
-                            let nonTerminalNode = children[0]\(callSyntax(for: name))()
+                            let nonTerminalNode = children[0].\(callSyntax(for: name))
                             return \(lhs.nonColliding).\(name.camelCased.nonColliding)(nonTerminalNode)
                         }\(lt)\n
                 """
@@ -94,7 +94,7 @@ extension Generator {
         
         string += """
                 fatalError()
-            
+                
             }
         
         """

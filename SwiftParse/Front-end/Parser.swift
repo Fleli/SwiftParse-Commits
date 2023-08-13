@@ -8,13 +8,15 @@ class LLParser {
     
     private var generator: Generator!
     
-    func parse(_ tokens: [Token], _ generator: Generator) throws -> [Statement] {
+    func parse(_ tokens: [Token], _ generator: Generator) throws -> (mainItem: RhsItem, statements: [Statement]) {
         
         self.index = 0
         self.tokens = tokens
         self.statements = []
         
         self.generator = generator
+        
+        let mainProduction = try parseMain()
         
         while notExhausted {
             
@@ -35,7 +37,7 @@ class LLParser {
             
         }
         
-        return statements
+        return (mainProduction, statements)
         
     }
     
@@ -195,7 +197,7 @@ class LLParser {
         
         var classElements: [ClassElement] = []
         
-        while notExhausted {
+        classLoop: while notExhausted {
             
             switch tokens[index].type {
                 
@@ -210,10 +212,11 @@ class LLParser {
             case "}":
                 
                 index += 1
-                break
+                break classLoop
                 
             default:
                 
+                print(classElements)
                 throw ParseError.unexpected(found: tokens[index].content, expected: "class element")
                 
             }
@@ -385,6 +388,17 @@ class LLParser {
         }
         
         return classItems
+        
+    }
+    
+    private func parseMain() throws -> RhsItem {
+        
+        try assertNextIsAmong("@main")
+        index += 1
+        
+        let nonTerminal = try nextToken(as: "nonTerminal").content
+        
+        return .nonTerminal(name: nonTerminal)
         
     }
     
