@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		084EA95F2AAB5C8F006E99D1 /* SwiftSLR in Frameworks */ = {isa = PBXBuildFile; productRef = 084EA95E2AAB5C8F006E99D1 /* SwiftSLR */; };
 		089B39672A7E4F7600DFA36C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B39662A7E4F7600DFA36C /* main.swift */; };
 		089B39742A7E7EFC00DFA36C /* Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B39732A7E7EFC00DFA36C /* Generator.swift */; };
 		089B39762A7E9C8400DFA36C /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089B39752A7E9C8400DFA36C /* Lexer.swift */; };
@@ -63,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				084EA95F2AAB5C8F006E99D1 /* SwiftSLR in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +160,9 @@
 			dependencies = (
 			);
 			name = SwiftParse;
+			packageProductDependencies = (
+				084EA95E2AAB5C8F006E99D1 /* SwiftSLR */,
+			);
 			productName = SwiftParse;
 			productReference = 089B39632A7E4F7600DFA36C /* SwiftParse */;
 			productType = "com.apple.product-type.tool";
@@ -186,6 +191,9 @@
 				Base,
 			);
 			mainGroup = 089B395A2A7E4F7500DFA36C;
+			packageReferences = (
+				084EA95D2AAB5C8F006E99D1 /* XCRemoteSwiftPackageReference "SwiftSLR" */,
+			);
 			productRefGroup = 089B39642A7E4F7600DFA36C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -374,6 +382,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		084EA95D2AAB5C8F006E99D1 /* XCRemoteSwiftPackageReference "SwiftSLR" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Fleli/SwiftSLR";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		084EA95E2AAB5C8F006E99D1 /* SwiftSLR */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 084EA95D2AAB5C8F006E99D1 /* XCRemoteSwiftPackageReference "SwiftSLR" */;
+			productName = SwiftSLR;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 089B395B2A7E4F7500DFA36C /* Project object */;
 }

@@ -59,9 +59,14 @@ class Declaration {
     ? #= var value: Expression
 }
 
+nested Reference {
+    case variable #identifier
+}
+
 precedence Expression {
     infix #||
     infix #&&
+    infix #!
     infix #|
     infix #^
     infix #&
@@ -70,7 +75,7 @@ precedence Expression {
     infix #+ #-
     infix #* #/ #%
     prefix #-
-    : #identifier
+    : Reference
     : #( Expression #)
     : Closure
 }

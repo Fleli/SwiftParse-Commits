@@ -1,4 +1,5 @@
 import Foundation
+import SwiftSLR
 
 class Generator {
     
@@ -54,7 +55,7 @@ class Generator {
         writeToFile(content: types, at: path + "/" + "Types.swift")
         writeToFile(content: converters, at: path + "/" + "Converters.swift")
         
-        print("\nSwiftSLR Specification\n--(begin)\n\(swiftSLRSpecificationFile)--(end)\n")
+        try SwiftSLR.Generator.generate(from: swiftSLRSpecificationFile, includingToken: true, location: path, parseFile: "Parser.swift")
         
     }
     
