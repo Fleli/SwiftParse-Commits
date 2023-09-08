@@ -46,8 +46,8 @@ class Generator {
         // TODO: Generer SLR-parser med SwiftSLR
         
         for statement in statements.statements {
-            types += try build_type(for: statement)
-            converters += try "extension SLRNode {\n\n\(build_conversion(statement))\n}"
+            types += try build_type(for: statement) + "\n"
+            converters += try "extension SLRNode {\n\n\(build_conversion(statement))\n}\n\n"
         }
         
         converters += build_convertToTerminal()
@@ -55,7 +55,7 @@ class Generator {
         writeToFile(content: types, at: path + "/" + "Types.swift")
         writeToFile(content: converters, at: path + "/" + "Converters.swift")
         
-        try SwiftSLR.Generator.generate(from: swiftSLRSpecificationFile, includingToken: true, location: path, parseFile: "Parser.swift")
+        try SwiftSLR.Generator.generate(from: swiftSLRSpecificationFile, includingToken: false, location: path, parseFile: "Parser")
         
     }
     

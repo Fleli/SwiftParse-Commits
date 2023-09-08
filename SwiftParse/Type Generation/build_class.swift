@@ -1,6 +1,6 @@
 extension Generator {
     
-    private struct ClassField: CustomStringConvertible, Equatable {
+    private struct ClassField: CustomStringConvertible, Equatable, Hashable {
         
         let required: Bool
         
@@ -8,7 +8,7 @@ extension Generator {
         let type: String
         
         var swiftSyntax: String { "let " + swiftSignature }
-        var swiftSignature: String { name + ": " + type + (required ? "" : "?") }
+        var swiftSignature: String { name.nonColliding + ": " + type.nonColliding + (required ? "" : "?") }
         var description: String { swiftSyntax }
         
         func hash(into hasher: inout Hasher) {
@@ -28,10 +28,15 @@ extension Generator {
         
     }
     
-    private struct Initializer {
+    private struct Initializer: Hashable {
         
         let allFields: [ClassField]
         let chosenFields: [ClassField]
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(allFields)
+            hasher.combine(chosenFields)
+        }
         
         var swiftSyntax: String {
             
@@ -105,7 +110,9 @@ extension Generator {
     
     private func initializers(_ fields: [ClassField], _ allProductions: [[ClassItem]]) -> [Initializer] {
         
-        var initializers: [Initializer] = []
+        var initializers: Set<Initializer> = []
+        
+        print("Class: All productions: \(allProductions)")
         
         for production in allProductions {
             
@@ -114,11 +121,12 @@ extension Generator {
                 .map { ClassField(true, $0.name, $0.type.swiftSLRToken) }
             
             let newInitializer = Initializer(fields, chosenFields)
-            initializers.append(newInitializer)
+            print("Added initializer: \(newInitializer)")
+            initializers.insert(newInitializer)
             
         }
         
-        return initializers
+        return [Initializer](initializers)
         
     }
     

@@ -6,16 +6,19 @@ extension Generator {
         
         let swiftType = lhs.nonColliding
         
-        var string = "enum \(swiftType) {\n\t\n"
+        var string = "indirect enum \(swiftType) {\n\t\n"
         var operatorGroups: [Operators] = []
         
-        let twoArgumentNonRoots = groups.filter { $0.isInfix }
+        let twoArgumentNonRoots = groups.compactMap { $0.infixOperators }
+        let taCount = twoArgumentNonRoots.map({ $0.count }).reduce(0, { $0 + $1 })
         
-        if twoArgumentNonRoots.count > 0 {
+        print("Two argument non roots of \(lhs): \(twoArgumentNonRoots.count) \(twoArgumentNonRoots)")
+        
+        if taCount > 0 {
             
             string += "\tenum InfixOperator {\n\t"
             
-            for index in 0 ..< twoArgumentNonRoots.count {
+            for index in 0 ..< taCount {
                 string += "\tcase operator_\(index)\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
             }
             
@@ -25,13 +28,16 @@ extension Generator {
             
         }
         
-        let singleArgumentNonRoots = groups.filter { $0.isSingleArgument }
+        let singleArgumentNonRoots = groups.compactMap { $0.singleArgumentOperators }
+        let saCount = singleArgumentNonRoots.map({$0.count}).reduce(0, {$0 + $1})
         
-        if singleArgumentNonRoots.count > 0 {
+        print("Single argument non roots of \(lhs): \(singleArgumentNonRoots.count) \(singleArgumentNonRoots)")
+        
+        if saCount > 0 {
             
             string += "\tenum SingleArgumentOperator {\n\t"
             
-            for index in 0 ..< singleArgumentNonRoots.count {
+            for index in 0 ..< saCount {
                 string += "\tcase operator_\(index)\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
             }
             

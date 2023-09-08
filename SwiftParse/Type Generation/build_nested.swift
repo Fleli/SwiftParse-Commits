@@ -2,7 +2,7 @@ extension Generator {
     
     func build_nested(_ lhs: String, _ cases: [NestItem]) throws -> String {
         
-        var string = "enum \(lhs.nonColliding) {" + lt + lt
+        var string = "indirect enum \(lhs.nonColliding) {" + lt + lt
         
         for nestItem in cases {
             
@@ -44,7 +44,7 @@ extension Generator {
                     }
                 case .list(let repeating, _):
                     let label = getLabel(repeating.swiftSLRToken.camelCased.nonColliding)
-                    associatedValues.append((label: label + "s", type: "[" + repeating.swiftSLRToken + "]"))
+                    associatedValues.append((label: label + "s", type: "[" + repeating.swiftSLRToken.nonColliding + "]"))
                 }
                 
             }

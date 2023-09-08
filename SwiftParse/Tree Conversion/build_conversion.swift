@@ -196,8 +196,8 @@ extension Generator {
                         +   child(1, is: `operator`.swiftSLRToken)
                         +   child(2, is: nextNonTerminal)
                         +   " {" + lttt + lttt
-                        +   "let arg1 = children[0].convertTo\(nonTerminal)()" + lttt
-                        +   "let arg2 = children[2].convertTo\(nextNonTerminal)()" + lttt
+                        +   "let arg1 = children[0].convertTo\(lhs)()" + lttt
+                        +   "let arg2 = children[2].convertTo\(lhs)()" + lttt
                         +   "return .infixOperator(.operator_\(infixOperatorCount), arg1, arg2)" + lttt + ltt
                         
                         infixOperatorCount += 1
@@ -208,8 +208,8 @@ extension Generator {
                             childCountIs(2)
                         +   child(0, is: `operator`.swiftSLRToken)
                         +   child(1, is: nextNonTerminal)
-                        +   " {" + lttt + lttt
-                        +   "let arg = children[1].convertTo\(nextNonTerminal)()" + lttt
+                        +   " {" + lttt + lttt
+                        +   "let arg = children[1].convertTo\(lhs)()" + lttt
                         +   "return .singleArgumentOperator(.operator_\(singleArgOperatorCount), arg)" + lttt + ltt
                         
                         singleArgOperatorCount += 1
@@ -220,8 +220,8 @@ extension Generator {
                             childCountIs(2)
                         +   child(0, is: nextNonTerminal)
                         +   child(1, is: `operator`.swiftSLRToken)
-                        +   " {" + lttt + lttt
-                        +   "let arg = children[0].convertTo\(nextNonTerminal)()" + lttt
+                        +   " {" + lttt + lttt
+                        +   "let arg = children[0].convertTo\(lhs)()" + lttt
                         +   "return .singleArgumentOperator(.operator_\(singleArgOperatorCount), arg)" + lttt + ltt
                         
                         singleArgOperatorCount += 1
@@ -295,7 +295,7 @@ extension Generator {
             
         }
         
-        return string
+        return string + "\t}\n"
         
     }
     
@@ -311,10 +311,10 @@ extension Generator {
             
             for (index, classItem) in production.enumerated() {
                 
-                initArgs.append("arg\(index)")
-                
                 switch classItem {
                 case .classField(_, let type):
+                    
+                    initArgs.append("arg\(index)")
                     
                     switch type {
                     case .terminal(let type):
@@ -327,7 +327,6 @@ extension Generator {
                     
                 case .syntactical(let item):
                     ifStatement += child(index, is: item.swiftSLRNodeName)
-                    argumentDeclarations.append("let arg\(index) = children[\(index)].\(convertToTerminalCall)")
                 }
                 
             }

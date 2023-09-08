@@ -142,6 +142,24 @@ enum PrecedenceGroup: CustomStringConvertible {
         }
     }
     
+    var infixOperators: [RhsItem]? {
+        switch self {
+        case .ordinary(let type, let operators) where type == .infix:
+            return operators
+        default:
+            return nil
+        }
+    }
+    
+    var singleArgumentOperators: [RhsItem]? {
+        switch self {
+        case .ordinary(let type, let operators) where type != .infix:
+            return operators
+        default:
+            return nil
+        }
+    }
+    
     var isSingleArgument: Bool {
         switch self {
         case .ordinary(.prefix, _), .ordinary(type: .postfix, _):
