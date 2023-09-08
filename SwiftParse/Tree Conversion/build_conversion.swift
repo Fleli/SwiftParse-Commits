@@ -275,7 +275,7 @@ extension Generator {
                     ifStatement
                 +   " {" + lttt + lttt
                 
-                var returnStatement = "return " + caseName + "("
+                var returnStatement = "return ." + caseName + "("
                 
                 for (index, declaration) in declarations.enumerated() {
                     
@@ -295,7 +295,7 @@ extension Generator {
             
         }
         
-        return string + "\t}\n"
+        return string + "\t\tfatalError()\n\t\t\n\t}\n"
         
     }
     
