@@ -6,6 +6,8 @@ class Generator {
     let lexer = Lexer()
     let parser = LLParser()
     
+    var desiredVisibility = "internal"
+    
     struct List: Hashable {
         
         let repeatingItem: RhsItem
@@ -20,7 +22,9 @@ class Generator {
     
     private var lists: Set<List> = []
     
-    func createParser(from specification: String, at path: String) throws {
+    func createParser(from specification: String, at path: String, visibility: String = "public") throws {
+        
+        self.desiredVisibility = visibility
         
         let tokens = try produceTokens(from: specification)
         
@@ -45,7 +49,7 @@ class Generator {
         
         for statement in statements.statements {
             types += try build_type(for: statement) + "\n"
-            converters += try "extension SLRNode {\n\n\(build_conversion(statement))\n}\n\n"
+            converters += try "\(desiredVisibility) extension SLRNode {\n\n\(build_conversion(statement))\n}\n\n"
         }
         
         converters += build_convertToTerminal()
@@ -53,7 +57,7 @@ class Generator {
         writeToFile(content: types, at: path + "/" + "Types.swift")
         writeToFile(content: converters, at: path + "/" + "Converters.swift")
         
-        try SwiftSLR.Generator.generate(from: swiftSLRSpecificationFile, includingToken: false, location: path, parseFile: "Parser")
+        try SwiftSLR.generate(from: swiftSLRSpecificationFile, includingToken: false, location: path, parseFile: "Parser", visibility: "public")
         
     }
     
@@ -72,7 +76,7 @@ class Generator {
     
     private func generateListConverter(_ nodeName: String, _ separator: String) -> String {
         return """
-            extension SLRNode {
+            \(desiredVisibility) extension SLRNode {
                 
                 func convertTo\(nodeName.CamelCased)LIST() -> [\(nodeName.nonColliding)] {
                     

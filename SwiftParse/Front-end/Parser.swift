@@ -14,6 +14,10 @@ class LLParser {
         self.tokens = tokens
         self.statements = []
         
+        for i in 0 ..< tokens.count {
+            print(i, tokens[i])
+        }
+        
         self.generator = generator
         
         let mainProduction = try parseMain()
@@ -32,7 +36,7 @@ class LLParser {
             case "class":
                 try parseClass()
             default:
-                throw ParseError.unexpected(found: tokens[index].content, expected: "some Statement")
+                throw ParseError.unexpected(found: tokens[index].content, expected: "some Statement", location: index)
             }
             
         }
@@ -67,7 +71,7 @@ class LLParser {
             if let item = RhsItem(from: nextToken) {
                 enumCases.append(item)
             } else {
-                throw ParseError.unexpected(found: nextToken.content, expected: "terminal or nonTerminal")
+                throw ParseError.unexpected(found: nextToken.content, expected: "terminal or nonTerminal", location: index)
             }
             
             index += 1
@@ -174,7 +178,7 @@ class LLParser {
                 
             } else {
                 
-                throw ParseError.unexpected(found: tokens[index].content, expected: "operator position or root production")
+                throw ParseError.unexpected(found: tokens[index].content, expected: "operator position or root production", location: index)
                 
             }
             
@@ -217,7 +221,7 @@ class LLParser {
             default:
                 
                 print(classElements)
-                throw ParseError.unexpected(found: tokens[index].content, expected: "class element")
+                throw ParseError.unexpected(found: tokens[index].content, expected: "class element", location: index)
                 
             }
             
@@ -240,7 +244,7 @@ class LLParser {
         let next = tokens[index]
         
         guard types.contains(next.type) else {
-            throw ParseError.unexpected(found: next.type, expected: types.description)
+            throw ParseError.unexpected(found: next.type, expected: types.description, location: index)
         }
         
     }
@@ -277,7 +281,7 @@ class LLParser {
             }
             
             guard let rhsItem = RhsItem(from: tokens[index]) else {
-                throw ParseError.unexpected(found: tokens[index].content, expected: "some RhsItem")
+                throw ParseError.unexpected(found: tokens[index].content, expected: "some RhsItem", location: index)
             }
             
             index += 1
@@ -321,7 +325,7 @@ class LLParser {
             } else if nextToken.type == "[" {
                 try collected.append(parseList())
             } else {
-                throw ParseError.unexpected(found: nextToken.content, expected: "some RhsItem ...")
+                throw ParseError.unexpected(found: nextToken.content, expected: "some RhsItem ...", location: index)
             }
             
             index += 1
@@ -352,7 +356,7 @@ class LLParser {
             index += 1
             
             guard let type = RhsItem(from: tokens[index]) else {
-                throw ParseError.unexpected(found: tokens[index].content, expected: "RhsItem")
+                throw ParseError.unexpected(found: tokens[index].content, expected: "RhsItem", location: index)
             }
             
             index += 1
@@ -381,7 +385,7 @@ class LLParser {
                 
             default:
                 
-                throw ParseError.unexpected(found: tokens[index].content, expected: "class item")
+                throw ParseError.unexpected(found: tokens[index].content, expected: "class item", location: index)
                 
             }
             
@@ -408,7 +412,7 @@ class LLParser {
 enum ParseError: Error {
     
     case exhausted(expected: String)
-    case unexpected(found: String, expected: String)
+    case unexpected(found: String, expected: String, location: Int)
     case incomplete(expectedPattern: String)
     
 }

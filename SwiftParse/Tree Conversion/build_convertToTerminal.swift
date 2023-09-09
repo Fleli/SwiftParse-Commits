@@ -4,7 +4,7 @@ extension Generator {
         
         return """
         
-        extension SLRNode {
+        \(desiredVisibility) extension SLRNode {
         
             func convertToTerminal() -> String {
             

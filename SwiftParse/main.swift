@@ -17,20 +17,6 @@ nested Main {
 
 enum Statement {
     case Declaration
-    case Return
-    case Assignment
-}
-
-enum Visibility {
-    case #private
-    case #protected
-    case #public
-}
-
-nested Type {
-    case basic #identifier
-    case function Type #-> Type
-    case tuple #( [ Type | #, ] #)
 }
 
 enum DeclarationKeyword {
@@ -38,21 +24,11 @@ enum DeclarationKeyword {
     case #var
 }
 
-class Return {
-    ! #return
-    ? var expression: Expression
-    ! #;
-}
-
-class Assignment {
-    ! var lhs: #identifier
-    ! #=
-    ! var rhs: Expression
-    ! #;
+nested Type {
+    case basic #identifier
 }
 
 class Declaration {
-    ? var visibility: Visibility
     ! var keyword: DeclarationKeyword
     ! var name: #identifier
     ? #: var type: Type
@@ -64,27 +40,10 @@ nested Reference {
 }
 
 precedence Expression {
-    infix #||
-    infix #&&
-    infix #!
-    infix #|
-    infix #^
-    infix #&
-    infix #== #!=
-    infix #>= #<= #> #<
     infix #+ #-
     infix #* #/ #%
-    prefix #-
     : Reference
     : #( Expression #)
-    : Closure
-}
-
-class Closure {
-    ! #{
-    ? #: Type #;
-    ! var list: Main
-    ! #}
 }
 
 """

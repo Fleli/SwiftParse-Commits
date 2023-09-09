@@ -60,7 +60,7 @@ extension Generator {
     
     func build_class(_ lhs: String, _ elements: [ClassElement], _ allProductions: [[ClassItem]]) throws -> String {
         
-        var string = "class \(lhs.nonColliding) {" + lt + "\n"
+        var string = desiredVisibility + " class \(lhs.nonColliding) {" + lt + "\n"
         
         let fields = classFields(elements)
         

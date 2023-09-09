@@ -6,20 +6,21 @@ extension Generator {
         
         let swiftType = lhs.nonColliding
         
-        var string = "indirect enum \(swiftType) {\n\t\n"
+        var string = desiredVisibility + " indirect enum \(swiftType) {\n\t\n"
         var operatorGroups: [Operators] = []
         
         let twoArgumentNonRoots = groups.compactMap { $0.infixOperators }
+        let ta = twoArgumentNonRoots.reduce([], { $0 + $1 } )
         let taCount = twoArgumentNonRoots.map({ $0.count }).reduce(0, { $0 + $1 })
         
         print("Two argument non roots of \(lhs): \(twoArgumentNonRoots.count) \(twoArgumentNonRoots)")
         
         if taCount > 0 {
             
-            string += "\tenum InfixOperator {\n\t"
+            string += "\t\(desiredVisibility) enum InfixOperator: String {\n\t"
             
             for index in 0 ..< taCount {
-                string += "\tcase operator_\(index)\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
+                string += "\tcase operator_\(index) = \"\(ta[index])\"\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
             }
             
             string += "}\n"
@@ -29,16 +30,17 @@ extension Generator {
         }
         
         let singleArgumentNonRoots = groups.compactMap { $0.singleArgumentOperators }
-        let saCount = singleArgumentNonRoots.map({$0.count}).reduce(0, {$0 + $1})
+        let sa = singleArgumentNonRoots.reduce([], { $0 + $1 })
+        let saCount = sa.count
         
         print("Single argument non roots of \(lhs): \(singleArgumentNonRoots.count) \(singleArgumentNonRoots)")
         
         if saCount > 0 {
             
-            string += "\tenum SingleArgumentOperator {\n\t"
+            string += "\t\(desiredVisibility) enum SingleArgumentOperator: String {\n\t"
             
             for index in 0 ..< saCount {
-                string += "\tcase operator_\(index)\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
+                string += "\tcase operator_\(index)\"\(sa[index])\"\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
             }
             
             string += "}\n\t\n\tcase singleArgumentOperator(SingleArgumentOperator, \(lhs))\n\t\n"

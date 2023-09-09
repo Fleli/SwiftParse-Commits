@@ -2,7 +2,7 @@ extension Generator {
     
     func build_enum(_ lhs: String, _ cases: [RhsItem]) throws -> String {
         
-        var string = "enum \(lhs.nonColliding) {" + lt
+        var string = desiredVisibility + " enum \(lhs.nonColliding) {" + lt
         
         for enumCase in cases {
             
