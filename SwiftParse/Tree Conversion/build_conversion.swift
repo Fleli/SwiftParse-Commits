@@ -42,6 +42,7 @@ extension Generator {
     }
     
     private func child(_ index: Int, is type: String) -> String {
+        let type = (type.first == "#") ? (String(type.dropFirst())) : (type)
         return " && children[" + String(index) + "].type == \"" + type + "\""
     }
     
