@@ -38,8 +38,6 @@ class Generator {
         for list in lists {
             let nodeName = list.repeatingItem.swiftSLRNodeName
             let separator = (list.separator?.swiftSLRToken ?? "") + " "
-            swiftSLRSpecificationFile.append(nodeName + "LIST -> " + nodeName + "LIST " + separator + nodeName + "\n")
-            swiftSLRSpecificationFile.append(nodeName + "LIST -> " + nodeName + "\n")
             converters += generateListConverter(nodeName, separator)
         }
         
@@ -77,6 +75,10 @@ class Generator {
             extension SLRNode {
                 
                 func convertTo\(nodeName.CamelCased)LIST() -> [\(nodeName.nonColliding)] {
+                    
+                    if children.count == 0 {
+                        return []
+                    }
                     
                     if children.count == 1 {
                         return [children[0].convertTo\(nodeName.CamelCased)()]

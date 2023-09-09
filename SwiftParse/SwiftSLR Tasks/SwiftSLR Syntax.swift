@@ -49,6 +49,7 @@ extension StatementType {
                     
                     lists += "\(listName) -> \(listName) \(separator == nil ? "" : separator!.swiftSLRToken + " ")\(repeating.swiftSLRToken)\n"
                     lists += "\(listName) -> \(repeating.swiftSLRToken)\n"
+                    lists += "\(listName) ->\n"
                     
                 } else if case .item(let rhsItem) = rhsComponent {
                     
