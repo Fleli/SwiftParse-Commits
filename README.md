@@ -260,6 +260,8 @@ Step 6 uses SwiftSLR to generate the `SLRParser` class. This is responsible for 
 5       | `[Statement]`     | `String`, `String`    | Generate type definitions and `SLRNode` tree converters, write them to files
 6       | `String`          | `String`              | Use SwiftSLR to generate the actual parser and write to a file
 
-## Empty Productions
+## Future Updates
 
-Since SwiftParse builds on top of SwiftSLR, it is limited by one issue (missing feature) with SwiftSLR: It does not accept empty productions. Thus, it does (for instance) not allow a list to be empty, so `[ A ]` only recognizes `A`, `A A`, `A A A` and so on. 
+Several updates might come in the future:
+1. SwiftParse will probably be converted into a package. This allows for a cleaner interface.
+2. The `class` statement will support list definitions instead of having to rely on "filler" `nested` statements that clutter the user experience.
