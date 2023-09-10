@@ -135,21 +135,19 @@ extension Generator {
     
     private func descriptor(_ element: ClassElement) -> String {
         
-        var description = ""
-        
         let variables = element.classItems.compactMap({$0.asClassField})
         
         if element.required {
             
-            description = String(element.classItems.map {$0.inDescriptor(false)}.reduce("", {$0 + " + " + $1}).dropFirst(3))
+            return String(element.classItems.map {$0.inDescriptor(false)}.reduce("", {$0 + " + " + $1}).dropFirst(3))
             
         } else if let deciding = variables.first {
             
-            description = "(\(deciding.name) == nil ? \"\" : \" \"" + element.classItems.map {$0.inDescriptor(true)}.reduce("", {$0 + " + " + $1}) + ")"
+            return "(\(deciding.name) == nil ? \"\" : " + element.classItems.map {$0.inDescriptor(true)}.reduce("", {$0 + " + " + $1}).dropFirst(3) + ")"
             
         }
         
-        return description
+        return ""
         
     }
     
