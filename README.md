@@ -1,6 +1,64 @@
 # SwiftParse
 
-SwiftParse is a Simple LR (SLR) parser generator. Both SwiftParse and the resulting parsers are written in Swift. It offers a layer of abstraction over [SwiftSLR](https://github.com/Fleli/SwiftSLR).
+SwiftParse is a Simple LR (SLR) parser generator. Both SwiftParse and the resulting parsers are written in Swift. It offers a layer of abstraction over [SwiftSLR](https://github.com/Fleli/SwiftSLR). In addition to calling the SwiftSLR API for the actual parser, SwiftParse does two things:
+- It takes the user's specification and forms Swift types that match them
+- It defines extension on the `SLRNode` type (the type that makes up the parse tree) to convert the tree so it consists only of user-defined types
+
+## How do I use SwiftParse?
+
+SwiftParse is not organized as a package (though this might change later). Instead, you use its `main.swift` file to tell SwiftParse what should be generated. The `createParser` function of `generator` takes in a `specification` (`String`) and a `path` (`String`). When you run the program, it will (if the specification does not contain errors) generate three files: `Types.swift`, `Converters.swift` and `Parser.swift`. The latter comes from SwiftSLR.
+
+## The SwiftParse specification format
+
+A SwiftParse specification `String` starts with an `@main` statement, starting with the `@main` reserved keyword followed by a non-terminal. This is used to tell the parser what production is final and accepting. An `@main` statement might look like this:
+
+```
+@main Main
+```
+
+Then comes the actual (abstracted) grammar. SwiftParse offers four types of statements:
+- `enum` statements, for simple groups of related but distinct options
+- `nested` statements, for extended `enum`s that allow indirection, multiple terminals and non-terminals per case, and lists.
+- `precedence` statements, that offer a maintainable, readable and clean syntax for deeply dependent (and recursive) productions
+- `class` statements, for types that follow a specific pattern, with some optional and some required parts
+
+Note: The non-terminal `SwiftSLRMain` is reserved by SwiftParse and should never be used. 
+
+### The `enum` statement
+
+`enum` statements are the simplest of the four. If declarations can start either with the `var` or `let` keywords, an `enum` is perfect:
+
+The SwiftParse syntax for that `enum` would look the following:
+```
+enum DeclarationPrefix {
+    case #let
+    case #var
+}
+```
+
+When SwiftParse sees this statement, it will
+- include the `DeclarationPrefix` productions in the grammar that it passes to SwiftSLR
+- create a `DeclarationPrefix` type (including `CustomStringConvertible` conformance) in the resulting Swift files so that it can be further used
+- generate converter functions so that the raw `SLRNode` tree from SwiftSLR's parser can be converted to user-defined types
+
+The `DeclarationPrefix` type in the resulting `Types.swift` file will look like this:
+```
+public enum DeclarationKeyword: CustomStringConvertible {
+	
+    case `let`
+    case `var`
+	
+    public var description: String {
+    	switch self {
+    	case .`let`: return "let"
+    	case .`var`: return "var"
+    	}
+    }
+    
+}
+```
+
+### The `nested` statement
 
 ## Inner workings
 
