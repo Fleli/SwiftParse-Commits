@@ -6,8 +6,9 @@ extension Generator {
         
         let swiftType = lhs.nonColliding
         
-        var string = desiredVisibility + " indirect enum \(swiftType) {\n\t\n"
-        var operatorGroups: [Operators] = []
+        var descriptor = "\(desiredVisibility) var description: String {" + ltt + "switch self {" + ltt
+        
+        var string = desiredVisibility + " indirect enum \(swiftType): CustomStringConvertible {\n\t\n"
         
         let twoArgumentNonRoots = groups.compactMap { $0.infixOperators }
         let ta = twoArgumentNonRoots.reduce([], { $0 + $1 } )
@@ -16,6 +17,8 @@ extension Generator {
         print("Two argument non roots of \(lhs): \(twoArgumentNonRoots.count) \(twoArgumentNonRoots)")
         
         if taCount > 0 {
+            
+            descriptor += "case .infixOperator(let op, let a, let b): return (\\(a.description) \\(op.rawValue) \\(b.description))" + ltt
             
             string += "\t\(desiredVisibility) enum InfixOperator: String {\n\t"
             
@@ -37,10 +40,12 @@ extension Generator {
         
         if saCount > 0 {
             
+            descriptor += "case .singleArgumentOperator(let op, let a): return (\\(op.rawValue) \\(a.description))" + ltt
+            
             string += "\t\(desiredVisibility) enum SingleArgumentOperator: String {\n\t"
             
             for index in 0 ..< saCount {
-                string += "\tcase operator_\(index)\"\(sa[index])\"\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
+                string += "\tcase operator_\(index) = \"\(sa[index])\"\n\t" // TODO: Endre syntax slik at brukeren velger hva operatoren skal hete i denne enum-en. MERK: Det krever også endring i parseren og PrecedenceGroup-enum-en.
             }
             
             string += "}\n\t\n\tcase singleArgumentOperator(SingleArgumentOperator, \(lhs))\n\t\n"
@@ -50,13 +55,17 @@ extension Generator {
         for group in groups {
             
             switch group {
-            case .ordinary(_, let operators):
-                operatorGroups.append(operators)
+            case .ordinary(_, _):
+                break
             case .root(let rhs):
-                string += try build_precedence_root(rhs)
+                let rootBuildResult = build_precedence_root(rhs)
+                string += rootBuildResult.caseLine
+                descriptor += build_root_descriptor(rootBuildResult.caseName, rootBuildResult.associatedValues, rhs)
             }
             
         }
+        
+        string += lt + descriptor + "}" + lt + "}" + lt
         
         string += "\n}\n"
         
@@ -64,10 +73,14 @@ extension Generator {
         
     }
     
-    private func build_precedence_root(_ rhs: [RhsItem]) throws -> String {
+    private typealias RootBuildResult = (caseName: String, caseLine: String, associatedValues: [String])
+    
+    private func build_precedence_root(_ rhs: [RhsItem]) -> RootBuildResult {
         
         var string = ""
         var associatedValues: [String] = []
+        
+        var result: RootBuildResult = ("", "", [])
         
         for item in rhs {
             switch item {
@@ -79,6 +92,9 @@ extension Generator {
                 associatedValues.append(name)
             }
         }
+        
+        result.caseName = string
+        result.associatedValues = associatedValues
         
         string = "\tcase " + string + "("
         
@@ -92,7 +108,42 @@ extension Generator {
         
         string += "\n"
         
-        return string
+        result.caseLine = string
+        
+        return result
+        
+    }
+    
+    private func build_root_descriptor(_ caseName: String, _ associatedValues: [String], _ rhs: [RhsItem]) -> String {
+        
+        var part1 = "case .\(caseName)("
+        var part2 = "return "
+        
+        var nameCounter: [String : Int] = [:]
+        
+        for (index, associatedValue) in associatedValues.enumerated() {
+            
+            var adjusted = associatedValue.camelCased.nonColliding
+            
+            if let count = nameCounter[adjusted] {
+                nameCounter[adjusted] = count + 1
+                adjusted += "_\(count)"
+            } else {
+                nameCounter[adjusted] = 1
+            }
+            
+            switch rhs[index] {
+            case .nonTerminal(_):
+                part1 += "let " + adjusted + ", "
+                part2 += "\(adjusted).description + "
+            case .terminal(let type):
+                part1 += "_, "
+                part2 += "\"\(type)\" + "
+            }
+            
+        }
+        
+        return part1.dropLast(2) + "): " + part2.dropLast(3) + ltt
         
     }
     

@@ -58,6 +58,7 @@ class Argument {
 precedence Expression {
     infix #+ #-
     infix #* #/ #%
+    prefix #-
     : Reference
     : #( Expression #)
 }
