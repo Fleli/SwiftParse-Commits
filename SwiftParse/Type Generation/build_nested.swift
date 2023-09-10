@@ -3,7 +3,7 @@ extension Generator {
     func build_nested(_ lhs: String, _ cases: [NestItem]) throws -> String {
         
         var string = desiredVisibility + " indirect enum \(lhs.nonColliding) {" + lt + lt
-         
+        
         for nestItem in cases {
             
             let caseName = nestItem.caseName

@@ -299,7 +299,7 @@ class LLParser {
                   tokens[index].type == "|",
                   tokens[index + 1].type == "terminal",
                   tokens[index + 2].type == "]" else {
-                throw ParseError.incomplete(expectedPattern: "| separator ]")
+                throw ParseError.incomplete(expectedPattern: "| separator ]")
             }
             
             let separator = tokens[index + 1].content

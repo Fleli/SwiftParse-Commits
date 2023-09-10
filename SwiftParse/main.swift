@@ -17,6 +17,8 @@ nested Main {
 
 enum Statement {
     case Declaration
+    case Assignment
+    case Function
 }
 
 enum DeclarationKeyword {
@@ -28,15 +30,29 @@ nested Type {
     case basic #identifier
 }
 
+class Assignment {
+    ! var lhs: Reference
+    ! #=
+    ! var rhs: Expression
+    ! #;
+}
+
 class Declaration {
     ! var keyword: DeclarationKeyword
     ! var name: #identifier
     ? #: var type: Type
     ? #= var value: Expression
+    ! #;
 }
 
 nested Reference {
     case variable #identifier
+    case call Reference #( [ Argument | #, ] #)
+}
+
+class Argument {
+    ? var flowWord: #identifier #:
+    ! var value: Expression
 }
 
 precedence Expression {
@@ -44,6 +60,24 @@ precedence Expression {
     infix #* #/ #%
     : Reference
     : #( Expression #)
+}
+
+class Function {
+    ! #func var name: #identifier
+    ! #( var parameters: Parameters #)
+    ? #-> var returnType: Type
+    ! #{ var body: Main #}
+}
+
+nested Parameters {
+    case parameterList [ Parameter | #, ]
+}
+
+class Parameter {
+    ? var label: #identifier
+    ! var name: #identifier
+    ! #:
+    ! var type: Type
 }
 
 """

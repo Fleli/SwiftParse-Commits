@@ -60,7 +60,10 @@ extension Generator {
     
     func build_class(_ lhs: String, _ elements: [ClassElement], _ allProductions: [[ClassItem]]) throws -> String {
         
-        var string = desiredVisibility + " class \(lhs.nonColliding) {" + lt + "\n"
+        var string = "\(desiredVisibility) class \(lhs.nonColliding): CustomStringConvertible {" + lt + "\n"
+        
+        let descriptionGetter: String = lt + "\(desiredVisibility) var description: String {" + ltt + elements.map({ descriptor($0) }).reduce("", { $0 + " + " + $1 }).dropFirst(3) + lt + "}" + lt
+        print("Description Getter: \(descriptionGetter)")
         
         let fields = classFields(elements)
         
@@ -72,7 +75,7 @@ extension Generator {
             string += initializer.swiftSyntax
         }
         
-        string += "\t\n}\n"
+        string += "\(descriptionGetter)\n}\n"
         
         return string
         
@@ -127,6 +130,26 @@ extension Generator {
         }
         
         return [Initializer](initializers)
+        
+    }
+    
+    private func descriptor(_ element: ClassElement) -> String {
+        
+        var description = ""
+        
+        let variables = element.classItems.compactMap({$0.asClassField})
+        
+        if element.required {
+            
+            description = String(element.classItems.map {$0.inDescriptor}.reduce("", {$0 + " + " + $1}).dropFirst(3))
+            
+        } else if let deciding = variables.first {
+            
+            description = "(\(deciding.name) == nil ? \"\" : \" \"" + element.classItems.map {$0.inDescriptor}.reduce("", {$0 + " + " + $1}) + ")"
+            
+        }
+        
+        return description
         
     }
     

@@ -214,6 +214,15 @@ enum ClassItem: CustomStringConvertible {
         }
     }
     
+    var inDescriptor: String {
+        switch self {
+        case .classField(let name, _):
+            return "\(name).description"
+        case .syntactical(let item):
+            return "\" \(item.description) \""
+        }
+    }
+    
     var swiftSLRToken: String {
         
         switch self {
@@ -231,6 +240,15 @@ enum ClassItem: CustomStringConvertible {
             return (name, type)
         case .syntactical(_):
             return nil
+        }
+    }
+    
+    var isClassField: Bool {
+        switch self {
+        case .classField(_, _):
+            return true
+        case .syntactical(_):
+            return false
         }
     }
     
