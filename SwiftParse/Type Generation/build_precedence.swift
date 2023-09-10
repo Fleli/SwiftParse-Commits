@@ -18,7 +18,7 @@ extension Generator {
         
         if taCount > 0 {
             
-            descriptor += "case .infixOperator(let op, let a, let b): return (\\(a.description) \\(op.rawValue) \\(b.description))" + ltt
+            descriptor += "case .infixOperator(let op, let a, let b): return \"\\(a.description) \\(op.rawValue) \\(b.description)\"" + ltt
             
             string += "\t\(desiredVisibility) enum InfixOperator: String {\n\t"
             
@@ -40,7 +40,7 @@ extension Generator {
         
         if saCount > 0 {
             
-            descriptor += "case .singleArgumentOperator(let op, let a): return (\\(op.rawValue) \\(a.description))" + ltt
+            descriptor += "case .singleArgumentOperator(let op, let a): return \"\\(op.rawValue) \\(a.description)\"" + ltt
             
             string += "\t\(desiredVisibility) enum SingleArgumentOperator: String {\n\t"
             

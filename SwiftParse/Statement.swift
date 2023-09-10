@@ -214,10 +214,10 @@ enum ClassItem: CustomStringConvertible {
         }
     }
     
-    var inDescriptor: String {
+    func inDescriptor(_ forceUnwrap: Bool = false) -> String {
         switch self {
         case .classField(let name, _):
-            return "\(name).description"
+            return "\(name)\(forceUnwrap ? "!" : "").description"
         case .syntactical(let item):
             return "\" \(item.description) \""
         }
