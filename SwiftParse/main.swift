@@ -28,6 +28,8 @@ enum DeclarationKeyword {
 
 nested Type {
     case basic #identifier
+    case function Type #-> Type
+    case tuple #( [ Type | #, ] #)
 }
 
 class Assignment {
